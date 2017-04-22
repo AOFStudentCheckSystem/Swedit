@@ -20,7 +20,7 @@ class EventActivityFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_event, container, false)
         val listView = rootView.findViewById(R.id.event_list_view) as ListView
-        mAdapter = EventListAdapter()
+        mAdapter = EventListAdapter(context)
         listView.adapter = mAdapter
         return rootView
     }

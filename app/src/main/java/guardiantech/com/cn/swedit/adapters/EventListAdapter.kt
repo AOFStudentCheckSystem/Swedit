@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import guardiantech.com.cn.swedit.persistence.EventItem
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
+import android.widget.TextView
 import guardiantech.com.cn.swedit.R
 
 /**
@@ -19,8 +18,12 @@ class EventListAdapter(private val context: Context) : BaseAdapter() {
 
     @SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        convertView ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
+        val newView = convertView ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
+        (newView.findViewById(R.id.event_list_item_title) as TextView).text = getItem(position) as String
+        (newView.findViewById(R.id.event_list_item_description) as TextView).text = "Desc"
+        (newView.findViewById(R.id.event_list_item_time) as TextView).text = "Moment"
 
+        return newView
     }
 
     override fun getItem(position: Int): Any {
