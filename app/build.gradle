@@ -30,6 +30,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile group: 'com.j256.ormlite', name: 'ormlite-android', version: '4.45'
 }
 repositories {
     mavenCentral()

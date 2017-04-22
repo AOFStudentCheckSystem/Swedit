@@ -19,7 +19,8 @@ class EventListAdapter(private val context: Context) : BaseAdapter() {
     @SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val newView = convertView ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
-        (newView.findViewById(R.id.event_list_item_title) as TextView).text = getItem(position) as String
+        val event = getItem(position)
+        (newView.findViewById(R.id.event_list_item_title) as TextView).text = event as String
         (newView.findViewById(R.id.event_list_item_description) as TextView).text = "Desc"
         (newView.findViewById(R.id.event_list_item_time) as TextView).text = "Moment"
 
