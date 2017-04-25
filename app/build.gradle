@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "guardiantech.com.cn.swedit"
         minSdkVersion 15
@@ -32,6 +32,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile group: 'com.j256.ormlite', name: 'ormlite-core', version: '4.17'
     compile group: 'com.j256.ormlite', name: 'ormlite-android', version: '4.45'
+    debugCompile 'im.dino:dbinspector:3.4.1@aar'
 }
 repositories {
     mavenCentral()
