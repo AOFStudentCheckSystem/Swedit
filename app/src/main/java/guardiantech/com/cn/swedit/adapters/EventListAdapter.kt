@@ -7,28 +7,30 @@ import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.R
+import guardiantech.com.cn.swedit.database.persistence.EventItem
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by liupeiqi on 2017/4/20.
  */
-class EventListAdapter(private val context: Context) : BaseAdapter() {
-
-    val fakeData = listOf("1","2","3","1","2","3","1","2","3","1","2","3","1","2","3")
+class EventListAdapter(private val context: Context, private val eventDao: Dao<EventItem, String>) : BaseAdapter() {
 
     @SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val newView = convertView ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
-        val event = getItem(position)
-        (newView.findViewById(R.id.event_list_item_title) as TextView).text = event as String
-        (newView.findViewById(R.id.event_list_item_description) as TextView).text = "Desc"
-        (newView.findViewById(R.id.event_list_item_time) as TextView).text = "Moment"
+        val event = getItem(position) as EventItem
+        (newView.findViewById(R.id.event_list_item_title) as TextView).text = event.eventName
+        (newView.findViewById(R.id.event_list_item_description) as TextView).text = event.eventDescription
+        (newView.findViewById(R.id.event_list_item_time) as TextView).text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss").format(event.eventTime)
 
         return newView
     }
 
     override fun getItem(position: Int): Any {
-        return fakeData[position]
+        return eventDao.queryForFirst(eventDao.queryBuilder().orderBy("eventTime", false).offset(position.toLong()).limit(1L).prepare())
     }
 
     override fun getItemId(position: Int): Long {
@@ -36,7 +38,7 @@ class EventListAdapter(private val context: Context) : BaseAdapter() {
     }
 
     override fun getCount(): Int {
-        return 15
+        return eventDao.countOf().toInt()
     }
 
 }

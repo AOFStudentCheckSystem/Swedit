@@ -15,7 +15,10 @@ import java.sql.SQLException
 /**
  * Created by liupeiqi on 2017/4/24.
  */
-class DBHelper(context: Context) : OrmLiteSqliteOpenHelper(context, DBConfig.get(context, "DB_NAME"), null, DBConfig.get(context, "DB_VERSION")!!.toInt()) {
+
+const val DB_NAME = "Swedit.db"
+const val DB_VERSION = 1
+class DBHelper(context: Context) : OrmLiteSqliteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     var eventDao: Dao<EventItem, String>? = null
         get () {
