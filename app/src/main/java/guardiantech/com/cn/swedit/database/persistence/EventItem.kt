@@ -16,7 +16,7 @@ class EventItem() {
     private lateinit var eventName: String
     @DatabaseField
     private lateinit var eventDescription: String
-    @DatabaseField(dataType = DataType.DATE_TIME)
+    @DatabaseField(dataType = DataType.DATE)
     private lateinit var eventTime: Date
     @DatabaseField
     private var eventStatus: Long = 0
