@@ -24,7 +24,7 @@ class EventListAdapter(private val context: Context, private val eventDao: Dao<E
         val event = getItem(position) as EventItem
         (newView.findViewById(R.id.event_list_item_title) as TextView).text = event.eventName
         (newView.findViewById(R.id.event_list_item_description) as TextView).text = event.eventDescription
-        (newView.findViewById(R.id.event_list_item_time) as TextView).text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss").format(event.eventTime)
+        (newView.findViewById(R.id.event_list_item_time) as TextView).text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
 
         return newView
     }

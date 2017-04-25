@@ -2,6 +2,7 @@ package guardiantech.com.cn.swedit
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +13,23 @@ import guardiantech.com.cn.swedit.adapters.EventListAdapter
 import guardiantech.com.cn.swedit.database.persistence.EventItem
 import guardiantech.com.cn.swedit.network.EventAPI
 import java.util.*
+import android.R.attr.data
+import android.util.Log
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class EventActivityFragment : DBFragment() {
+class EventActivityListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var eventDao: Dao<EventItem, String>
     private lateinit var mAdapter: EventListAdapter
     private lateinit var eventAPI: EventAPI
+    private lateinit var mSwipeLayout: SwipeRefreshLayout
+    private var refreshing = false
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val rootView = inflater!!.inflate(R.layout.fragment_event, container, false)
-        val listView = rootView.findViewById(R.id.event_list_view) as ListView
-
+        val rootView = inflater!!.inflate(R.layout.fragment_event_list, container, false)
         eventDao = dbHelper.eventDao!!
         eventDao.setObjectCache(true)
 
@@ -37,13 +41,26 @@ class EventActivityFragment : DBFragment() {
 //        eventDao.createOrUpdate(events[2])
 
         mAdapter = EventListAdapter(context, eventDao)
-
         eventAPI = EventAPI(context, eventDao, mAdapter)
-
+        val listView = rootView.findViewById(R.id.event_list_view) as ListView
         listView.adapter = mAdapter
 
-        eventAPI.fetchEventList()
+        mSwipeLayout = rootView.findViewById(R.id.event_list_refresh) as SwipeRefreshLayout
+        mSwipeLayout.setOnRefreshListener(this);
+
+        eventAPI.fetchEventList {}
 
         return rootView
+    }
+
+    override fun onRefresh() {
+        if (!refreshing) {
+            refreshing = true
+            mSwipeLayout.isRefreshing = true
+            eventAPI.fetchEventList {
+                refreshing = false
+                mSwipeLayout.isRefreshing = false
+            }
+        }
     }
 }

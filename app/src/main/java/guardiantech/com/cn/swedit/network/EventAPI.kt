@@ -1,5 +1,6 @@
 package guardiantech.com.cn.swedit.network
 
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -22,7 +23,7 @@ class EventAPI(private val context: Context, private val eventDao: Dao<EventItem
 
     private var queue = Volley.newRequestQueue(context)
 
-    fun fetchEventList() {
+    fun fetchEventList(callback: (success: Boolean) -> Unit) {
         Log.wtf("WTF", "fetchEventList")
         val request = JsonObjectRequest(Request.Method.GET, "https://api.aofactivities.com/event/listall", null,
                 Response.Listener<JSONObject> { response ->
@@ -39,9 +40,11 @@ class EventAPI(private val context: Context, private val eventDao: Dao<EventItem
                                 ))
                             }
                     mAdapter.notifyDataSetChanged()
+                    callback(true)
                 },
                 Response.ErrorListener {
                     Toast.makeText(context, "An Error Occured!", Toast.LENGTH_SHORT).show()
+                    callback(false)
                 })
         queue.add(request)
     }
