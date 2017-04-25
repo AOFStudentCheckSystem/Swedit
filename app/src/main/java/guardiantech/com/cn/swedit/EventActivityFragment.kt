@@ -10,6 +10,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager
 import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.adapters.EventListAdapter
 import guardiantech.com.cn.swedit.database.persistence.EventItem
+import guardiantech.com.cn.swedit.network.EventAPI
 import java.util.*
 
 /**
@@ -18,6 +19,7 @@ import java.util.*
 class EventActivityFragment : DBFragment() {
     private lateinit var eventDao: Dao<EventItem, String>
     private lateinit var mAdapter: EventListAdapter
+    private lateinit var eventAPI: EventAPI
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -35,7 +37,13 @@ class EventActivityFragment : DBFragment() {
 //        eventDao.createOrUpdate(events[2])
 
         mAdapter = EventListAdapter(context, eventDao)
+
+        eventAPI = EventAPI(context, eventDao, mAdapter)
+
         listView.adapter = mAdapter
+
+        eventAPI.fetchEventList()
+
         return rootView
     }
 }

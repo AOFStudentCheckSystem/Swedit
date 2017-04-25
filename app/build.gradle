@@ -33,6 +33,7 @@ dependencies {
     compile group: 'com.j256.ormlite', name: 'ormlite-core', version: '4.17'
     compile group: 'com.j256.ormlite', name: 'ormlite-android', version: '4.45'
     debugCompile 'im.dino:dbinspector:3.4.1@aar'
+    compile 'com.android.volley:volley:1.0.0'
 }
 repositories {
     mavenCentral()
