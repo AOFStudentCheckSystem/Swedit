@@ -48,7 +48,7 @@ class EventActivityListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshList
         mSwipeLayout = rootView.findViewById(R.id.event_list_refresh) as SwipeRefreshLayout
         mSwipeLayout.setOnRefreshListener(this);
 
-        eventAPI.fetchEventList {}
+        eventAPI.fetchEventList()
 
         return rootView
     }

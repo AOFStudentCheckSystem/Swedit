@@ -19,9 +19,9 @@ class EventItem() {
     @DatabaseField(dataType = DataType.DATE)
     lateinit var eventTime: Date
     @DatabaseField
-    var eventStatus: Long = 0
+    var eventStatus: Int = 0
 
-    constructor(eventId: String, eventName: String, eventDescription: String, eventTime: Date, eventStatus: Long) : this() {
+    constructor(eventId: String, eventName: String, eventDescription: String, eventTime: Date, eventStatus: Int) : this() {
         this.eventId = eventId
         this.eventName = eventName
         this.eventDescription = eventDescription
