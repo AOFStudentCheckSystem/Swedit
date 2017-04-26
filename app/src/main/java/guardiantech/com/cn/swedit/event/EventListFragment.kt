@@ -13,12 +13,13 @@ import guardiantech.com.cn.swedit.DBFragment
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.adapters.EventListAdapter
 import guardiantech.com.cn.swedit.database.persistence.EventItem
+import guardiantech.com.cn.swedit.eventbus.Bus
 import guardiantech.com.cn.swedit.network.EventAPI
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class EventListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+class EventListFragment : DBFragment(withBus = false), SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
     private lateinit var eventDao: Dao<EventItem, String>
     private lateinit var mAdapter: EventListAdapter
     private lateinit var mSwipeLayout: SwipeRefreshLayout
@@ -32,7 +33,6 @@ class EventListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshListener, Ad
         eventDao = dbHelper.eventDao!!
 
         mAdapter = EventListAdapter(context, eventDao)
-        EventAPI.eventListAdapter = mAdapter
         val listView = rootView.findViewById(R.id.event_list_view) as ListView
         listView.adapter = mAdapter
         listView.onItemClickListener = this
@@ -47,6 +47,7 @@ class EventListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshListener, Ad
             refreshing = true
             mSwipeLayout.isRefreshing = true
             EventAPI.fetchEventList {
+                if (it) mAdapter.notifyDataSetChanged()
                 refreshing = false
                 mSwipeLayout.isRefreshing = false
             }

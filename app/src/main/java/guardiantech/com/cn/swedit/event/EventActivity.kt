@@ -12,8 +12,6 @@ import java.io.Serializable
 class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListener, EventDetailFragment.OnEventDetailChangeListener {
     private val TAG = "EVENT_ACTIVITY"
 
-    private lateinit var editButton: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,9 +21,6 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
         EventAPI.eventDao = dbHelper.eventDao!!
 
         setContentView(R.layout.activity_event)
-
-        editButton = findViewById(R.id.edit_button) as Button
-        editButton.visibility = View.GONE
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
@@ -45,12 +40,9 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
         transaction.replace(R.id.event_fragment, fc)
         transaction.addToBackStack(null)
         transaction.commit()
-        editButton.visibility = View.VISIBLE
     }
 
     override fun onEventDetailEdit() {}
 
-    override fun onEventDetailBack() {
-        editButton.visibility = View.GONE
-    }
+    override fun onEventDetailBack() {}
 }

@@ -12,7 +12,11 @@ import org.json.JSONObject
 import java.util.*
 import com.android.volley.toolbox.Volley
 import com.android.volley.RequestQueue
+import com.j256.ormlite.table.TableUtils
 import guardiantech.com.cn.swedit.adapters.EventListAdapter
+import guardiantech.com.cn.swedit.database.DBHelper
+import guardiantech.com.cn.swedit.eventbus.Bus
+import guardiantech.com.cn.swedit.eventbus.DBChangeEvent
 
 
 /**
@@ -21,7 +25,6 @@ import guardiantech.com.cn.swedit.adapters.EventListAdapter
 object EventAPI {
     lateinit var context: Context
     lateinit var eventDao: Dao<EventItem, String>
-    lateinit var eventListAdapter: EventListAdapter
 
     private var queue: RequestQueue? = null
         get() {
@@ -32,10 +35,11 @@ object EventAPI {
         }
 
     fun fetchEventList(callback: (success: Boolean) -> Unit = {}) {
-        Log.wtf("WTF", "fetchEventList")
+//        Log.wtf("WTF", "fetchEventList")
         val request = JsonObjectRequest(Request.Method.GET, "https://api.aofactivities.com/event/listall", null,
                 Response.Listener<JSONObject> { response ->
                     val eventArray = response.getJSONArray("content")
+                    TableUtils.clearTable(eventDao.connectionSource, EventItem::class.java)
                     (0 until eventArray.length())
                             .map { eventArray.getJSONObject(it) }
                             .forEach {
@@ -47,7 +51,7 @@ object EventAPI {
                                         eventStatus = it.getInt("eventStatus")
                                 ))
                             }
-                    eventListAdapter.notifyDataSetChanged()
+                    Bus.post(DBChangeEvent("events"))
                     callback(true)
                 },
                 Response.ErrorListener {
