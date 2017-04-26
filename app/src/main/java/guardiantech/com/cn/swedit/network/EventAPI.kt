@@ -18,9 +18,18 @@ import guardiantech.com.cn.swedit.adapters.EventListAdapter
 /**
  * Created by liupeiqi on 2017/4/25.
  */
-class EventAPI(private val context: Context, private val eventDao: Dao<EventItem, String>, private val mAdapter: EventListAdapter) {
+object EventAPI {
+    lateinit var context: Context
+    lateinit var eventDao: Dao<EventItem, String>
+    lateinit var eventListAdapter: EventListAdapter
 
-    private var queue = Volley.newRequestQueue(context)
+    private var queue: RequestQueue? = null
+        get() {
+            if (field === null) {
+                field = Volley.newRequestQueue(context)
+            }
+            return field
+        }
 
     fun fetchEventList(callback: (success: Boolean) -> Unit = {}) {
         Log.wtf("WTF", "fetchEventList")
@@ -38,13 +47,13 @@ class EventAPI(private val context: Context, private val eventDao: Dao<EventItem
                                         eventStatus = it.getInt("eventStatus")
                                 ))
                             }
-                    mAdapter.notifyDataSetChanged()
+                    eventListAdapter.notifyDataSetChanged()
                     callback(true)
                 },
                 Response.ErrorListener {
                     Toast.makeText(context, "An Error Occured!", Toast.LENGTH_SHORT).show()
                     callback(false)
                 })
-        queue.add(request)
+        queue?.add(request)
     }
 }

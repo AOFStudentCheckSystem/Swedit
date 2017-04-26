@@ -34,7 +34,7 @@ class EventListAdapter(private val context: Context, private val eventDao: Dao<E
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong()
+        return (getItem(position) as EventItem).eventId.toLong(36)
     }
 
     override fun getCount(): Int {

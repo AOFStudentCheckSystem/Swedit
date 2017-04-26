@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180px"
-    android:orientation="vertical"
-    android:id="@+id/event_list_item">
+    android:layout_height="wrap_content"
+    >
 
     <LinearLayout
+        android:id="@+id/event_list_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:orientation="vertical">
@@ -17,23 +16,13 @@
             android:id="@+id/event_list_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".4"
             android:text="Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:textSize="12pt" />
-
-        <TextView
-            android:id="@+id/event_list_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".4"
-            android:text="Description"
-            android:textSize="7pt" />
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".2"
             android:orientation="horizontal">
 
             <TextView
@@ -41,19 +30,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Time"
-                android:textSize="7pt"
-                android:layout_weight=".5"/>
+                android:layout_weight="1"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/event_list_item_status"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight=".5"
                 android:gravity="end"
                 android:text="Status"
-                android:textSize="7pt" />
+                android:textSize="14sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/event_list_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>

@@ -1,5 +1,4 @@
 <resources>
     <string name="app_name">Swedit</string>
-    <string name="action_settings">Settings</string>
-
+    <string name="action_edit">Edit</string>
 </resources>
