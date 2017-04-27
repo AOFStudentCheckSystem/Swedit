@@ -20,16 +20,8 @@ const val DB_NAME = "Swedit.db"
 const val DB_VERSION = 1
 class DBHelper(context: Context) : OrmLiteSqliteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
-    var eventDao: Dao<EventItem, String>? = null
-        get () {
-            if (field === null) field = getDao(EventItem::class.java)
-            return field
-        }
-    var eventRuntimeDao: RuntimeExceptionDao<EventItem, String>? = null
-        get () {
-            if (field === null) field = getRuntimeExceptionDao(EventItem::class.java)
-            return field
-        }
+    val eventDao by lazy { getDao(EventItem::class.java) as Dao<EventItem, String> }
+    val eventRuntimeDao by lazy { getRuntimeExceptionDao(EventItem::class.java) as RuntimeExceptionDao<EventItem, String> }
 
     override fun onCreate(database: SQLiteDatabase?, connectionSource: ConnectionSource?) {
         try {

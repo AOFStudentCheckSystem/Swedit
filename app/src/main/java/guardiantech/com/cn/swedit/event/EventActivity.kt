@@ -15,14 +15,15 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        dbHelper.eventDao?.setObjectCache(true)
+        dbHelper.eventDao.setObjectCache(true)
 
         EventAPI.context = applicationContext
-        EventAPI.eventDao = dbHelper.eventDao!!
+        EventAPI.eventDao = dbHelper.eventDao
 
         setContentView(R.layout.activity_event)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         if (savedInstanceState != null) return
         supportFragmentManager.beginTransaction()
@@ -35,7 +36,7 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
         transaction.setCustomAnimations(R.anim.enter_enter, R.anim.enter_exit, R.anim.exit_enter, R.anim.exit_exit)
         val fc = EventDetailFragment()
         val bundle = Bundle()
-        bundle.putSerializable("event", dbHelper.eventDao?.queryForId(eventId))
+        bundle.putSerializable("event", dbHelper.eventDao.queryForId(eventId))
         fc.arguments = bundle
         transaction.replace(R.id.event_fragment, fc)
         transaction.addToBackStack(null)

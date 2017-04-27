@@ -12,10 +12,12 @@ import guardiantech.com.cn.swedit.DBFragment
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.database.persistence.EventItem
 import guardiantech.com.cn.swedit.eventbus.DBChangeEvent
+import guardiantech.com.cn.swedit.util.parseEventStatus
+import java.text.SimpleDateFormat
+import java.util.*
 
 class EventDetailFragment : DBFragment() {
     private lateinit var master: OnEventDetailChangeListener
-    private lateinit var editButton: Button
     private lateinit var event: EventItem
 
     private lateinit var eventId: TextView
@@ -32,25 +34,28 @@ class EventDetailFragment : DBFragment() {
 
         eventId = rootView.findViewById(R.id.event_detail_eventId) as TextView
         eventName = rootView.findViewById(R.id.event_detail_eventName) as TextView
+        eventTime = rootView.findViewById(R.id.event_detail_eventTime) as TextView
+        eventDescription = rootView.findViewById(R.id.event_detail_eventDescription) as TextView
+        eventStatus = rootView.findViewById(R.id.event_detail_eventStatus) as TextView
 
         updateFields()
-
-        editButton = activity.findViewById(R.id.edit_button) as Button
-        editButton.text = "Edit"
-        editButton.visibility = View.VISIBLE
 
         return rootView
     }
 
     override fun onDBUpdate(dbUpdate: DBChangeEvent) {
         if (dbUpdate.tableName == "events") {
-            event = dbHelper.eventDao?.queryForId(event.eventId)!!
+            event = dbHelper.eventDao.queryForId(event.eventId)
+            updateFields()
         }
     }
 
     fun updateFields () {
         eventId.text = event.eventId
         eventName.text = event.eventName
+        eventTime.text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
+        eventDescription.text = event.eventDescription
+        eventStatus.text = parseEventStatus(event.eventStatus)
     }
 
     interface OnEventDetailChangeListener {
@@ -65,8 +70,6 @@ class EventDetailFragment : DBFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        editButton.text = ""
-        editButton.visibility = View.GONE
         master.onEventDetailBack()
     }
 }

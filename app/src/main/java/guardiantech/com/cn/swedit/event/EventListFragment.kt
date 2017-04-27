@@ -30,7 +30,7 @@ class EventListFragment : DBFragment(withBus = false), SwipeRefreshLayout.OnRefr
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_event_list, container, false)
 
-        eventDao = dbHelper.eventDao!!
+        eventDao = dbHelper.eventDao
 
         mAdapter = EventListAdapter(context, eventDao)
         val listView = rootView.findViewById(R.id.event_list_view) as ListView

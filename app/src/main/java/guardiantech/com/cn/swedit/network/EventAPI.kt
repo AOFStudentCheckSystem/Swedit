@@ -1,7 +1,6 @@
 package guardiantech.com.cn.swedit.network
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -13,8 +12,6 @@ import java.util.*
 import com.android.volley.toolbox.Volley
 import com.android.volley.RequestQueue
 import com.j256.ormlite.table.TableUtils
-import guardiantech.com.cn.swedit.adapters.EventListAdapter
-import guardiantech.com.cn.swedit.database.DBHelper
 import guardiantech.com.cn.swedit.eventbus.Bus
 import guardiantech.com.cn.swedit.eventbus.DBChangeEvent
 
@@ -26,13 +23,7 @@ object EventAPI {
     lateinit var context: Context
     lateinit var eventDao: Dao<EventItem, String>
 
-    private var queue: RequestQueue? = null
-        get() {
-            if (field === null) {
-                field = Volley.newRequestQueue(context)
-            }
-            return field
-        }
+    private val queue by lazy { Volley.newRequestQueue(context) }
 
     fun fetchEventList(callback: (success: Boolean) -> Unit = {}) {
 //        Log.wtf("WTF", "fetchEventList")
@@ -58,6 +49,8 @@ object EventAPI {
                     Toast.makeText(context, "An Error Occured!", Toast.LENGTH_SHORT).show()
                     callback(false)
                 })
-        queue?.add(request)
+        queue.add(request)
     }
+
+//    fun fetchEventCheckinStudents()
 }
