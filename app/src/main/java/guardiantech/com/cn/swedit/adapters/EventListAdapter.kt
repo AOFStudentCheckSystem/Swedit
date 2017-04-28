@@ -10,9 +10,12 @@ import android.widget.TextView
 import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.database.persistence.EventItem
+import guardiantech.com.cn.swedit.util.DateTimeHelper
 import guardiantech.com.cn.swedit.util.parseEventStatus
 import java.text.SimpleDateFormat
 import java.util.*
+import com.j256.ormlite.stmt.Where
+
 
 /**
  * Created by liupeiqi on 2017/4/20.
@@ -31,7 +34,7 @@ class EventListAdapter(private val context: Context, private val eventDao: Dao<E
     }
 
     override fun getItem(position: Int): Any {
-        return eventDao.queryForFirst(eventDao.queryBuilder().orderBy("eventTime", false).offset(position.toLong()).limit(1L).prepare())
+        return shownEventsWhere(position).queryForFirst()
     }
 
     override fun getItemId(position: Int): Long {
@@ -39,7 +42,22 @@ class EventListAdapter(private val context: Context, private val eventDao: Dao<E
     }
 
     override fun getCount(): Int {
-        return eventDao.countOf().toInt()
+        return shownEventsWhere().countOf().toInt()
     }
 
+    fun shownEventsWhere (position: Int = -1): Where<EventItem, String> {
+        val first = position > 0
+        val qb = eventDao.queryBuilder()
+                .orderBy("eventTime", false)
+                .limit(-1L)
+        if (first) qb.offset(position.toLong())
+        val where = qb.where()
+        where.or(
+                where.and(
+                        where.gt("eventTime", Date(DateTimeHelper.firstms())),
+                        where.lt("eventTime", Date(DateTimeHelper.lastms()))),
+                where.lt("eventStatus", 2)
+        )
+        return where
+    }
 }

@@ -17,7 +17,7 @@ class EventItem(): Serializable {
     lateinit var eventName: String
     @DatabaseField
     lateinit var eventDescription: String
-    @DatabaseField(dataType = DataType.DATE)
+    @DatabaseField(dataType = DataType.DATE_LONG)
     lateinit var eventTime: Date
     @DatabaseField
     var eventStatus: Int = 0

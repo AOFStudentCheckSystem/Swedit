@@ -30,22 +30,6 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
                     <Button
-                        android:id="@+id/menu_button"
-                        style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:text="Menu"/>
-
-                    <TextView
-                        android:id="@+id/toolbar_title"
-                        style="@style/Base.TextAppearance.AppCompat.Widget.ActionBar.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Swedit!!" />
-
-                    <Button
                         android:id="@+id/edit_button"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
@@ -96,6 +80,10 @@
                 android:text="Please log in"
                 android:textColor="?android:attr/textColorSecondaryInverseNoDisable" />
         </LinearLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
