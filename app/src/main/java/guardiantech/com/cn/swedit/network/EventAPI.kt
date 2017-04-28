@@ -12,6 +12,7 @@ import java.util.*
 import com.android.volley.toolbox.Volley
 import com.android.volley.RequestQueue
 import com.j256.ormlite.table.TableUtils
+import guardiantech.com.cn.swedit.BASE_URL
 import guardiantech.com.cn.swedit.eventbus.Bus
 import guardiantech.com.cn.swedit.eventbus.DBChangeEvent
 
@@ -26,8 +27,7 @@ object EventAPI {
     private val queue by lazy { Volley.newRequestQueue(context) }
 
     fun fetchEventList(callback: (success: Boolean) -> Unit = {}) {
-//        Log.wtf("WTF", "fetchEventList")
-        val request = JsonObjectRequest(Request.Method.GET, "https://api.aofactivities.com/event/listall", null,
+        val request = JsonObjectRequest(Request.Method.GET, BASE_URL + "/event/listall", null,
                 Response.Listener<JSONObject> { response ->
                     val eventArray = response.getJSONArray("content")
                     TableUtils.clearTable(eventDao.connectionSource, EventItem::class.java)
@@ -51,6 +51,4 @@ object EventAPI {
                 })
         queue.add(request)
     }
-
-//    fun fetchEventCheckinStudents()
 }

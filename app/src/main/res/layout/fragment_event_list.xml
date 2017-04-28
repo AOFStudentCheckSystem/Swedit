@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="guardiantech.com.cn.swedit.event.EventListFragment"
     tools:layout_editor_absoluteY="137dp"
     tools:layout_editor_absoluteX="0dp"
+    android:orientation="vertical"
     >
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/event_list_refresh">
+        android:layout_height="0dp"
+        android:id="@+id/event_list_refresh"
+        android:layout_weight="1">
         <ListView
             android:id="@+id/event_list_view"
             android:layout_width="match_parent"
@@ -19,4 +20,18 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
-</FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary">
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:text="Go Sign Up!"
+            android:textColor="@android:color/white" />
+    </FrameLayout>
+</LinearLayout>
