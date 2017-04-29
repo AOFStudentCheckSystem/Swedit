@@ -35,8 +35,8 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
         supportFragmentManager.beginTransaction()
                 .add(R.id.event_fragment, EventListFragment()).commit()
 
-        val drawer = findViewById(R.id.activity_event_drawer) as DrawerLayout
-        val toggle = ActionBarDrawerToggle(
+        drawer = findViewById(R.id.activity_event_drawer) as DrawerLayout
+        toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
