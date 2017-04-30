@@ -9,7 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.R
-import guardiantech.com.cn.swedit.database.persistence.EventItem
+import guardiantech.com.cn.swedit.database.item.EventItem
 import guardiantech.com.cn.swedit.util.DateTimeHelper
 import guardiantech.com.cn.swedit.util.parseEventStatus
 import java.text.SimpleDateFormat

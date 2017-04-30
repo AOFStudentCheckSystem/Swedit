@@ -6,7 +6,7 @@ import com.google.common.eventbus.Subscribe
 import com.j256.ormlite.android.apptools.OpenHelperManager
 import guardiantech.com.cn.swedit.database.DBHelper
 import guardiantech.com.cn.swedit.eventbus.Bus
-import guardiantech.com.cn.swedit.eventbus.DBChangeEvent
+import guardiantech.com.cn.swedit.eventbus.event.DBChangeEvent
 
 /**
  * Created by liupeiqi on 2017/4/25.

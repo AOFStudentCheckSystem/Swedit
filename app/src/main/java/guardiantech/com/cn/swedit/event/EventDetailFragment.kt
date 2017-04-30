@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import guardiantech.com.cn.swedit.DBFragment
 
 import guardiantech.com.cn.swedit.R
-import guardiantech.com.cn.swedit.database.persistence.EventItem
-import guardiantech.com.cn.swedit.eventbus.DBChangeEvent
+import guardiantech.com.cn.swedit.database.item.EventItem
+import guardiantech.com.cn.swedit.eventbus.event.DBChangeEvent
 import guardiantech.com.cn.swedit.util.parseEventStatus
 import java.text.SimpleDateFormat
 import java.util.*

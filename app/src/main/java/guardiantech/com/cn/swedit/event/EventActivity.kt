@@ -1,19 +1,24 @@
 package guardiantech.com.cn.swedit.event
 
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
-import android.util.Log
-import android.view.Gravity
-import android.view.View
-import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import guardiantech.com.cn.swedit.DBActivity
 import guardiantech.com.cn.swedit.R
+import guardiantech.com.cn.swedit.account.LoginFragment
+import guardiantech.com.cn.swedit.eventbus.event.LoginEvent
+import guardiantech.com.cn.swedit.network.APIGlobal
+import guardiantech.com.cn.swedit.network.AccountAPI
 import guardiantech.com.cn.swedit.network.EventAPI
 
-class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListener, EventDetailFragment.OnEventDetailChangeListener, View.OnClickListener{
+class EventActivity : DBActivity(),
+        EventListFragment.OnEventListSelectedListener,
+        EventDetailFragment.OnEventDetailChangeListener {
 
     private val TAG = "EVENT_ACTIVITY"
     private lateinit var drawer: DrawerLayout
@@ -24,8 +29,9 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
 
         dbHelper.eventDao.setObjectCache(true)
 
-        EventAPI.context = applicationContext
+        APIGlobal.context = applicationContext
         EventAPI.eventDao = dbHelper.eventDao
+        AccountAPI.userDao = dbHelper.userDao
 
         setContentView(R.layout.activity_event)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
@@ -40,17 +46,33 @@ class EventActivity : DBActivity(), EventListFragment.OnEventListSelectedListene
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
+
+        val navHeader = (findViewById(R.id.drawer_navigation) as NavigationView).getHeaderView(0)
+
+        (navHeader.findViewById(R.id.drawer_header_avatar) as ImageView).setOnClickListener {
+            onDrawerHeaderClick()
+        }
+
+        (navHeader.findViewById(R.id.drawer_header_username) as TextView).setOnClickListener {
+            onDrawerHeaderClick()
+        }
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-//            R.id.menu_button -> {
-//                Log.wtf(TAG, "Yes")
-//                val g = Gravity.START
-//                if (drawer.isDrawerOpen(g)) drawer.closeDrawer(g)
-//                else drawer.openDrawer(g)
-//            }
+    private fun onDrawerHeaderClick() {
+        LoginFragment().show(fragmentManager, null)
+    }
+
+    override fun onLogin (login: LoginEvent) {
+        if (login.success) {
+
+        } else {
+            Toast.makeText(applicationContext, "Login Failed: ${login.error}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        EventAPI.fetchEventList()
     }
 
     override fun onEventSelected(eventId: String) {

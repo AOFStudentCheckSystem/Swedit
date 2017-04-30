@@ -1,4 +1,4 @@
-package guardiantech.com.cn.swedit.database.persistence
+package guardiantech.com.cn.swedit.database.item
 
 import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField

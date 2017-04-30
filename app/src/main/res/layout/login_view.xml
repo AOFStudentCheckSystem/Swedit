@@ -8,6 +8,7 @@
         android:id="@+id/login_view_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
         android:hint="email"
         android:inputType="textEmailAddress" />
 
@@ -15,6 +16,7 @@
         android:id="@+id/login_view_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
         android:hint="password"
         android:inputType="textPassword" />
 </LinearLayout>

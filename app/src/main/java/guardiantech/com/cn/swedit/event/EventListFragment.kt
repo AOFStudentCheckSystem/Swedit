@@ -12,14 +12,14 @@ import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.DBFragment
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.adapters.EventListAdapter
-import guardiantech.com.cn.swedit.database.persistence.EventItem
-import guardiantech.com.cn.swedit.eventbus.Bus
+import guardiantech.com.cn.swedit.database.item.EventItem
+import guardiantech.com.cn.swedit.eventbus.event.DBChangeEvent
 import guardiantech.com.cn.swedit.network.EventAPI
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class EventListFragment : DBFragment(withBus = false), SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+class EventListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
     private lateinit var eventDao: Dao<EventItem, String>
     private lateinit var mAdapter: EventListAdapter
     private lateinit var mSwipeLayout: SwipeRefreshLayout
@@ -47,10 +47,15 @@ class EventListFragment : DBFragment(withBus = false), SwipeRefreshLayout.OnRefr
             refreshing = true
             mSwipeLayout.isRefreshing = true
             EventAPI.fetchEventList {
-                if (it) mAdapter.notifyDataSetChanged()
                 refreshing = false
                 mSwipeLayout.isRefreshing = false
             }
+        }
+    }
+
+    override fun onDBUpdate(dbUpdate: DBChangeEvent) {
+        if (dbUpdate.tableName == "events") {
+            mAdapter.notifyDataSetChanged()
         }
     }
 

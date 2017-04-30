@@ -8,9 +8,8 @@ import com.j256.ormlite.support.ConnectionSource
 import com.j256.ormlite.dao.RuntimeExceptionDao
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.table.TableUtils
-import guardiantech.com.cn.swedit.DB_NAME
-import guardiantech.com.cn.swedit.DB_VERSION
-import guardiantech.com.cn.swedit.database.persistence.EventItem
+import guardiantech.com.cn.swedit.database.item.EventItem
+import guardiantech.com.cn.swedit.database.item.UserItem
 import java.sql.SQLException
 
 
@@ -18,10 +17,15 @@ import java.sql.SQLException
  * Created by liupeiqi on 2017/4/24.
  */
 
+const val DB_NAME = "Swedit.db"
+const val DB_VERSION = 1
+
 class DBHelper(context: Context) : OrmLiteSqliteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
     val eventDao by lazy { getDao(EventItem::class.java) as Dao<EventItem, String> }
     val eventRuntimeDao by lazy { getRuntimeExceptionDao(EventItem::class.java) as RuntimeExceptionDao<EventItem, String> }
+    val userDao by lazy { getDao(UserItem::class.java) as Dao<UserItem, String> }
+    val userRuntimeDao by lazy { getRuntimeExceptionDao(UserItem::class.java) as RuntimeExceptionDao<UserItem, String> }
 
     override fun onCreate(database: SQLiteDatabase?, connectionSource: ConnectionSource?) {
         try {
