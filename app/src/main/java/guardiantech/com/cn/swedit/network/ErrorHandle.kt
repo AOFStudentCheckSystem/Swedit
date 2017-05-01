@@ -12,14 +12,16 @@ object ErrorHandle {
             when(it.statusCode) {
                 401 -> {
                     //token expire, unauthorized
+                    return "Credential Error!"
                 }
 
                 403 -> {
                     //no permission
+                    return "You don't have permission to do this!"
                 }
 
                 else -> {
-                    return "Unknown Error"
+                    return "Unknown Error: ${error.message}"
                 }
             }
         }

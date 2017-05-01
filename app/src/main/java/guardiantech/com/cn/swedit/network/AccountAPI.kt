@@ -38,7 +38,8 @@ object AccountAPI {
                     }
                 },
                 Response.ErrorListener { e ->
-                    Toast.makeText(APIGlobal.context, "An error occured when updating account!", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(APIGlobal.context, "An error occured when login!", Toast.LENGTH_SHORT).show()
+                    callback(false, ErrorHandle.handle(e))
                 })
         APIGlobal.queue.add(loginRequest)
     }
