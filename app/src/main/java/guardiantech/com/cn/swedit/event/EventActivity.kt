@@ -1,5 +1,6 @@
 package guardiantech.com.cn.swedit.event
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
@@ -9,16 +10,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import guardiantech.com.cn.swedit.DBActivity
+import guardiantech.com.cn.swedit.Global
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.account.LoginFragment
 import guardiantech.com.cn.swedit.eventbus.event.LoginEvent
-import guardiantech.com.cn.swedit.network.APIGlobal
 import guardiantech.com.cn.swedit.network.AccountAPI
 import guardiantech.com.cn.swedit.network.EventAPI
+import guardiantech.com.cn.swedit.network.LoadingManager
 
 class EventActivity : DBActivity(),
         EventListFragment.OnEventListSelectedListener,
-        EventDetailFragment.OnEventDetailChangeListener {
+        EventDetailFragment.OnEventDetailChangeListener,
+        LoadingManager{
 
     private val TAG = "EVENT_ACTIVITY"
     private lateinit var drawer: DrawerLayout
@@ -27,19 +30,23 @@ class EventActivity : DBActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        dbHelper.eventDao.setObjectCache(true)
-
-        APIGlobal.context = applicationContext
-        EventAPI.eventDao = dbHelper.eventDao
-        AccountAPI.userDao = dbHelper.userDao
-
         setContentView(R.layout.activity_event)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
 
-        if (savedInstanceState != null) return
-        supportFragmentManager.beginTransaction()
-                .add(R.id.event_fragment, EventListFragment()).commit()
+        if (savedInstanceState === null) {
+            setSupportActionBar(toolbar)
+
+            Global.init(applicationContext)
+
+            Global.DB.dbHelper.eventDao.setObjectCache(true)
+            Global.DB.dbHelper.userDao.setObjectCache(true)
+
+            EventAPI.eventDao = Global.DB.dbHelper.eventDao
+            AccountAPI.userDao = Global.DB.dbHelper.userDao
+
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.event_fragment, EventListFragment()).commit()
+        }
 
         drawer = findViewById(R.id.activity_event_drawer) as DrawerLayout
         toggle = ActionBarDrawerToggle(
@@ -72,9 +79,11 @@ class EventActivity : DBActivity(),
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        EventAPI.fetchEventList()
+        if (savedInstanceState === null)
+            EventAPI.fetchEventList()
     }
 
+    //Event List
     override fun onEventSelected(eventId: String) {
 //        val transaction = supportFragmentManager.beginTransaction()
 //        transaction.setCustomAnimations(R.anim.enter_enter, R.anim.enter_exit, R.anim.exit_enter, R.anim.exit_exit)
@@ -87,9 +96,22 @@ class EventActivity : DBActivity(),
 //        transaction.commit()
     }
 
+    //Event Detail
     override fun onEventDetailEdit() {}
-
     override fun onEventDetailBack() {}
+
+    //Loading Manager
+    private var loadingDialog: ProgressDialog? = null
+    override fun startLoading () {
+        if (loadingDialog === null)
+            loadingDialog = ProgressDialog.show(this, "", "Loading, Please wait...", true)
+    }
+    override fun stopLoading () {
+        loadingDialog?.let {
+            it.dismiss()
+            loadingDialog = null
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()

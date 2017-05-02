@@ -11,17 +11,14 @@ import guardiantech.com.cn.swedit.eventbus.event.DBChangeEvent
 /**
  * Created by liupeiqi on 2017/4/25.
  */
-open class DBFragment(val withDB: Boolean = true, val withBus: Boolean = true): Fragment() {
-    lateinit var dbHelper: DBHelper
+open class DBFragment(val withBus: Boolean = true): Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (withDB) dbHelper = OpenHelperManager.getHelper(context, DBHelper::class.java)
         if (withBus) Bus.register(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (withDB) OpenHelperManager.releaseHelper()
         if (withBus) Bus.unregister(this)
     }
 

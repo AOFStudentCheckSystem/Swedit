@@ -1,10 +1,9 @@
 package guardiantech.com.cn.swedit.network
 
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.j256.ormlite.dao.Dao
+import guardiantech.com.cn.swedit.Global
 import guardiantech.com.cn.swedit.database.item.UserItem
 import guardiantech.com.cn.swedit.eventbus.Bus
 import guardiantech.com.cn.swedit.eventbus.event.DBChangeEvent
@@ -22,7 +21,7 @@ object AccountAPI {
         val map = HashMap<String, String>()
         map.put("email", email)
         map.put("password", password)
-        val loginRequest = JsonObjectRequestPeopleCanActuallyUse(Request.Method.POST, BASE_URL + "/auth/auth", map,
+        val loginRequest = JsonObjectRequestPeopleCanActuallyUse(Request.Method.POST, Global.API.BASE_URL + "/auth/auth", map,
                 Response.Listener { resp ->
                     val user = resp.getJSONObject("user")
                     if (user.optJSONObject("student") === null) {
@@ -38,10 +37,9 @@ object AccountAPI {
                     }
                 },
                 Response.ErrorListener { e ->
-//                    Toast.makeText(APIGlobal.context, "An error occured when login!", Toast.LENGTH_SHORT).show()
                     callback(false, ErrorHandle.handle(e))
                 })
-        APIGlobal.queue.add(loginRequest)
+        Global.API.queue.add(loginRequest)
     }
 
 }

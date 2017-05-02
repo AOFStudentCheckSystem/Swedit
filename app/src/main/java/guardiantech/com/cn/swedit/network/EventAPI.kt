@@ -8,6 +8,7 @@ import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.database.item.EventItem
 import java.util.*
 import com.j256.ormlite.table.TableUtils
+import guardiantech.com.cn.swedit.Global
 import guardiantech.com.cn.swedit.eventbus.Bus
 import guardiantech.com.cn.swedit.eventbus.event.DBChangeEvent
 
@@ -20,7 +21,7 @@ object EventAPI {
     lateinit var eventDao: Dao<EventItem, String>
 
     fun fetchEventList(callback: (success: Boolean) -> Unit = {}) {
-        val request = JsonObjectRequest(Request.Method.GET, BASE_URL + "/event/listall", null,
+        val request = JsonObjectRequest(Request.Method.GET, Global.API.BASE_URL + "/event/listall", null,
                 Response.Listener { response ->
                     val eventArray = response.getJSONArray("content")
                     TableUtils.clearTable(eventDao.connectionSource, EventItem::class.java)
@@ -39,9 +40,9 @@ object EventAPI {
                     callback(true)
                 },
                 Response.ErrorListener {
-                    Toast.makeText(APIGlobal.context, "An error occured when updating events!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(Global.context, "An error occured when updating events!", Toast.LENGTH_SHORT).show()
                     callback(false)
                 })
-        APIGlobal.queue.add(request)
+        Global.API.queue.add(request)
     }
 }

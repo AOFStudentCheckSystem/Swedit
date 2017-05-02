@@ -1,6 +1,7 @@
 package guardiantech.com.cn.swedit
 
 import android.app.Application
+import com.j256.ormlite.android.apptools.OpenHelperManager
 import com.umeng.message.IUmengRegisterCallback
 import com.umeng.message.MsgConstant
 import com.umeng.message.PushAgent
@@ -20,6 +21,8 @@ class SweditApplication : Application() {
             override fun onFailure(s: String, s1: String) {
             }
         })
+
+        PushAgent.getInstance(applicationContext).onAppStart()
 
         mPushAgent.notificationPlaySound = MsgConstant.NOTIFICATION_PLAY_SERVER
         mPushAgent.notificationPlayLights = MsgConstant.NOTIFICATION_PLAY_SERVER

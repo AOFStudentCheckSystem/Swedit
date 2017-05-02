@@ -1,12 +1,9 @@
 package guardiantech.com.cn.swedit.account
 
-import android.accounts.Account
 import android.app.Dialog
 import android.app.DialogFragment
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +12,13 @@ import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.eventbus.Bus
 import guardiantech.com.cn.swedit.eventbus.event.LoginEvent
 import guardiantech.com.cn.swedit.network.AccountAPI
-import java.util.concurrent.CountDownLatch
+import guardiantech.com.cn.swedit.network.LoadingManager
 
 
 /**
  * Created by liupeiqi on 2017/4/28.
  */
 class LoginFragment : DialogFragment() {
-
     private lateinit var emailField: EditText
     private lateinit var passwordField: EditText
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,6 +40,7 @@ class LoginFragment : DialogFragment() {
                         AccountAPI.login(emailField.text.toString(), passwordField.text.toString()) { success, error ->
                             Bus.post(LoginEvent(success, error?:"Unknown"))
                         }
+                        (activity as LoadingManager).startLoading()
                     })
                     .setNegativeButton("Cancel", { _, _ -> })
             return builder.create()

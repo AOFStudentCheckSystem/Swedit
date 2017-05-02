@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import guardiantech.com.cn.swedit.DBFragment
+import guardiantech.com.cn.swedit.Global
 
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.database.item.EventItem
@@ -44,7 +45,7 @@ class EventDetailFragment : DBFragment() {
 
     override fun onDBUpdate(dbUpdate: DBChangeEvent) {
         if (dbUpdate.tableName == "events") {
-            event = dbHelper.eventDao.queryForId(event.eventId)
+            event = Global.DB.dbHelper.eventDao.queryForId(event.eventId)
             updateFields()
         }
     }

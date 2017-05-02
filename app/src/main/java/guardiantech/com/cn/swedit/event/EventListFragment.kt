@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import com.j256.ormlite.dao.Dao
 import guardiantech.com.cn.swedit.DBFragment
+import guardiantech.com.cn.swedit.Global
 import guardiantech.com.cn.swedit.R
 import guardiantech.com.cn.swedit.adapters.EventListAdapter
 import guardiantech.com.cn.swedit.database.item.EventItem
@@ -30,7 +31,7 @@ class EventListFragment : DBFragment(), SwipeRefreshLayout.OnRefreshListener, Ad
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_event_list, container, false)
 
-        eventDao = dbHelper.eventDao
+        eventDao = Global.DB.dbHelper.eventDao
 
         mAdapter = EventListAdapter(context, eventDao)
         val listView = rootView.findViewById(R.id.event_list_view) as ListView

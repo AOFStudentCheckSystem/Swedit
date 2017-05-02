@@ -8,20 +8,37 @@ import com.android.volley.*
 object ErrorHandle {
     fun handle(error: VolleyError): String? {
         error.networkResponse?.let {
-            if (it is NoConnectionError || it is TimeoutError || it is ParseError) return "Network Error, please retry!"
-            when(it.statusCode) {
-                401 -> {
-                    //token expire, unauthorized
-                    return "Credential Error!"
+            when(it) {
+                is NoConnectionError -> {
+                    return "Network Error, please retry!"
                 }
-
-                403 -> {
-                    //no permission
-                    return "You don't have permission to do this!"
+                is TimeoutError -> {
+                    return "Network Error, please retry!"
                 }
-
+                is ParseError -> {
+                    return "Network Error, please retry!"
+                }
                 else -> {
-                    return "Unknown Error: ${error.message}"
+                    when(it.statusCode) {
+                        401 -> {
+                            //token expire, unauthorized
+                            return "Credential Error!"
+                        }
+
+                        403 -> {
+                            //no permission
+                            return "You don't have permission to do this!"
+                        }
+
+                        500 -> {
+                            //401
+                            return "Credential Error!"
+                        }
+
+                        else -> {
+                            return "Unknown Error: ${error.message}"
+                        }
+                    }
                 }
             }
         }
