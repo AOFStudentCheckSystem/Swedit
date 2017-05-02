@@ -3,8 +3,10 @@
     package="guardiantech.com.cn.swedit">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".SweditApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,6 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5908c467310c93150f001e2c">
+        </meta-data>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="7c145f7040e85645d6f2c5160c77a87c">
+        </meta-data>
     </application>
 
 </manifest>

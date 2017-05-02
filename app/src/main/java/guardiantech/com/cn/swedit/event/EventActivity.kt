@@ -64,7 +64,7 @@ class EventActivity : DBActivity(),
 
     override fun onLogin (login: LoginEvent) {
         if (login.success) {
-
+            
         } else {
             Toast.makeText(applicationContext, "Login Failed: ${login.error}", Toast.LENGTH_SHORT).show()
         }

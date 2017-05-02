@@ -26,7 +26,7 @@ class LoginFragment : DialogFragment() {
     private lateinit var emailField: EditText
     private lateinit var passwordField: EditText
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = super.onCreateView(inflater, container, savedInstanceState)
+        val rootView = inflater!!.inflate(R.layout.login_view, container, false)
         emailField = rootView.findViewById(R.id.login_view_email) as EditText
         passwordField = rootView.findViewById(R.id.login_view_password) as EditText
         return rootView

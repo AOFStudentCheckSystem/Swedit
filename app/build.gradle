@@ -36,6 +36,8 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
     debugCompile 'im.dino:dbinspector:3.4.1@aar'
+
+    compile project(':PushSDK')
 }
 repositories {
     mavenCentral()
