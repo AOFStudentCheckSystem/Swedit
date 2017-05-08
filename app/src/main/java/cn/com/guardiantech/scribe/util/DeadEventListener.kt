@@ -1,6 +1,6 @@
 package cn.com.guardiantech.scribe.util
 
-import cn.com.guardiantech.scribe.eventbus.Bus
+import cn.com.guardiantech.scribe.Global
 
 
 /**
@@ -13,6 +13,6 @@ object DeadEventListener {
     }
 
     init {
-        Bus.register(this)
+        Global.bus.register(this)
     }
 }

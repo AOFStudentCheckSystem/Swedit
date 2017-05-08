@@ -4,7 +4,6 @@ import com.android.volley.Request
 import com.android.volley.Response
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.database.item.UserItem
-import cn.com.guardiantech.scribe.eventbus.Bus
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import cn.com.guardiantech.scribe.network.request.JsonObjectRequestPeopleCanActuallyUse
 
@@ -30,7 +29,7 @@ object AccountAPI {
                             userLevel = user.getInt("userLevel"),
                             token = resp.getString("token")
                         ))
-                        Bus.post(DBChangeEvent("users"))
+                        Global.bus.post(DBChangeEvent("users"))
                         callback(true, null)
                     }
                 },

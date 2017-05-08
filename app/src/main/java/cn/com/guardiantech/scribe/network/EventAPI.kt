@@ -7,9 +7,7 @@ import cn.com.guardiantech.scribe.database.item.EventItem
 import java.util.*
 import com.j256.ormlite.table.TableUtils
 import cn.com.guardiantech.scribe.Global
-import cn.com.guardiantech.scribe.eventbus.Bus
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
-import com.google.common.eventbus.EventBus
 
 
 /**
@@ -35,7 +33,7 @@ object EventAPI {
                                         eventStatus = it.getInt("eventStatus")
                                 ))
                             }
-                    Bus.post(DBChangeEvent("events"))
+                    Global.bus.post(DBChangeEvent("events"))
                     callback(true)
                 },
                 Response.ErrorListener {
