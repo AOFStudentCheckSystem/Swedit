@@ -1,10 +1,12 @@
 package cn.com.guardiantech.scribe.api
 
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.database.item.UserItem
-import cn.com.guardiantech.scribe.api.request.JsonObjectRequestPeopleCanActuallyUse
+import com.android.volley.toolbox.JsonObjectRequest
+import org.json.JSONObject
 
 /**
  * Created by liupeiqi on 2017/4/28.
@@ -12,11 +14,12 @@ import cn.com.guardiantech.scribe.api.request.JsonObjectRequestPeopleCanActually
 object AccountAPI {
 
     fun login(email: String, password: String, callback: (success: Boolean, error: String?, userObject: UserItem?) -> Unit) {
-        val map = kotlin.collections.HashMap<String, String>()
+        val map = JSONObject()
         map.put("email", email)
         map.put("password", password)
-        val loginRequest = JsonObjectRequestPeopleCanActuallyUse(Request.Method.POST, Global.API.BASE_URL + "/auth/auth", map,
+        val loginRequest = JsonObjectRequest(Request.Method.POST, Global.API.BASE_URL + "/auth/auth", map,
                 Response.Listener { resp ->
+                    Log.w("AccountAPILoginSuccess", resp.toString())
                     val user = resp.getJSONObject("user")
 //                    if (user.optJSONObject("student") === null) {
 //                        callback(false, null)

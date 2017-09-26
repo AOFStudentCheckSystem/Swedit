@@ -1,5 +1,9 @@
 package cn.com.guardiantech.scribe.api
 
+import android.util.Log
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
+
 /**
  * Created by liupeiqi on 2017/4/30.
  */
