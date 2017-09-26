@@ -3,8 +3,8 @@ package cn.com.guardiantech.scribe.account
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
-import cn.com.guardiantech.scribe.network.AccountAPI
-import cn.com.guardiantech.scribe.network.LoadingManager
+import cn.com.guardiantech.scribe.api.AccountAPI
+import cn.com.guardiantech.scribe.api.LoadingManager
 
 
 /**

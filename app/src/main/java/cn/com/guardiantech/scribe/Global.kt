@@ -3,6 +3,7 @@ package cn.com.guardiantech.scribe
 import android.content.Context
 import cn.com.guardiantech.scribe.database.DBHelper
 import com.android.volley.toolbox.Volley
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.common.eventbus.EventBus
 import com.j256.ormlite.android.apptools.OpenHelperManager
 
@@ -29,4 +30,6 @@ object Global {
         val queue by lazy { Volley.newRequestQueue(context) }
         const val BASE_URL = "https://api.aofactivities.com"
     }
+
+    val mapper = ObjectMapper()
 }

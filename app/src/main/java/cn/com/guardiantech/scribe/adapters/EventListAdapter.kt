@@ -35,19 +35,18 @@ class EventListAdapter(private val context: android.content.Context, private val
         return shownEventsWhere().countOf().toInt()
     }
 
-    fun shownEventsWhere (position: Int = -1): com.j256.ormlite.stmt.Where<EventItem, String> {
+    fun shownEventsWhere(position: Int = -1): com.j256.ormlite.stmt.Where<EventItem, String> {
         val first = position > 0
         val qb = eventDao.queryBuilder()
                 .orderBy("eventTime", false)
                 .limit(-1L)
         if (first) qb.offset(position.toLong())
         val where = qb.where()
-        where.or(
-                where.and(
-                        where.gt("eventTime", java.util.Date(DateTimeHelper.firstms())),
-                        where.lt("eventTime", java.util.Date(DateTimeHelper.lastms()))),
-                where.lt("eventStatus", 2)
-        )
+        val isBeforeToday = where.and(
+                where.gt("eventTime", java.util.Date(DateTimeHelper.firstms())),
+                where.lt("eventTime", java.util.Date(DateTimeHelper.lastms())))
+        val isComplete = where.lt("eventStatus", 2)
+        where.or(isBeforeToday, isComplete)
         return where
     }
 }

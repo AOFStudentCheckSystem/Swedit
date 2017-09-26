@@ -1,5 +1,6 @@
 package cn.com.guardiantech.scribe.database.item
 
+import cn.com.guardiantech.scribe.util.NoArg
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
 
@@ -8,17 +9,12 @@ import com.j256.ormlite.table.DatabaseTable
  */
 
 @com.j256.ormlite.table.DatabaseTable(tableName = "users")
-class UserItem() {
+@NoArg
+class UserItem(
     @com.j256.ormlite.field.DatabaseField(id = true)
-    lateinit var email: String
+    var email: String,
     @com.j256.ormlite.field.DatabaseField
-    var userLevel: Int = 0
+    var userLevel: Int = 0,
     @com.j256.ormlite.field.DatabaseField
-    lateinit var token: String
-
-    constructor(email: String, userLevel: Int, token: String): this() {
-        this.email = email
-        this.userLevel = userLevel
-        this.token = token
-    }
-}
+    var token: String
+)

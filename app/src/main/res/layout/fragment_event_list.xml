@@ -21,17 +21,4 @@
             tools:layout_editor_absoluteY="8dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/colorPrimary">
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:text="Go Sign Up!"
-            android:textColor="@android:color/white" />
-    </FrameLayout>
 </LinearLayout>

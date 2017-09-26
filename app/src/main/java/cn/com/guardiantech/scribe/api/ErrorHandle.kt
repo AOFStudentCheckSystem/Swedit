@@ -1,4 +1,4 @@
-package cn.com.guardiantech.scribe.network
+package cn.com.guardiantech.scribe.api
 
 /**
  * Created by liupeiqi on 2017/4/30.

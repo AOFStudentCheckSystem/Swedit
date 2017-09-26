@@ -1,11 +1,6 @@
-package cn.com.guardiantech.scribe.network.request
+package cn.com.guardiantech.scribe.api.request
 
 import org.json.JSONObject
-import org.json.JSONException
-import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.*
-import java.io.UnsupportedEncodingException
-import java.nio.charset.Charset
 
 
 /**

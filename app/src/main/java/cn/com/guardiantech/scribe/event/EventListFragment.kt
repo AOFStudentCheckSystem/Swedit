@@ -6,7 +6,8 @@ import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.adapters.EventListAdapter
 import cn.com.guardiantech.scribe.database.item.EventItem
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
-import cn.com.guardiantech.scribe.network.EventAPI
+import cn.com.guardiantech.scribe.api.EventAPI
+import cn.com.guardiantech.scribe.controller.EventController
 
 /**
  * A placeholder fragment containing a simple view.
@@ -38,7 +39,7 @@ class EventListFragment : DBFragment(), android.support.v4.widget.SwipeRefreshLa
         if (!refreshing) {
             refreshing = true
             mSwipeLayout.isRefreshing = true
-            EventAPI.fetchEventList {
+            EventController.syncEventList() {
                 refreshing = false
                 mSwipeLayout.isRefreshing = false
             }

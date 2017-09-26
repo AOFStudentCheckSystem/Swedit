@@ -12,11 +12,13 @@ import android.widget.Toast
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.Global
+import cn.com.guardiantech.scribe.Global.DB.dbHelper
 import cn.com.guardiantech.scribe.account.LoginFragment
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
-import cn.com.guardiantech.scribe.network.AccountAPI
-import cn.com.guardiantech.scribe.network.EventAPI
-import cn.com.guardiantech.scribe.network.LoadingManager
+import cn.com.guardiantech.scribe.api.AccountAPI
+import cn.com.guardiantech.scribe.api.EventAPI
+import cn.com.guardiantech.scribe.api.LoadingManager
+import cn.com.guardiantech.scribe.controller.EventController
 
 class EventActivity : DBActivity(),
         EventListFragment.OnEventListSelectedListener,
@@ -41,7 +43,7 @@ class EventActivity : DBActivity(),
             Global.DB.dbHelper.eventDao.setObjectCache(true)
             Global.DB.dbHelper.userDao.setObjectCache(true)
 
-            EventAPI.eventDao = Global.DB.dbHelper.eventDao
+            EventController.eventDao = Global.DB.dbHelper.eventDao
             AccountAPI.userDao = Global.DB.dbHelper.userDao
 
             supportFragmentManager.beginTransaction()
@@ -81,20 +83,20 @@ class EventActivity : DBActivity(),
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         if (savedInstanceState === null)
-            EventAPI.fetchEventList()
+            EventController.syncEventList()
     }
 
     //Event List
     override fun onEventSelected(eventId: String) {
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.setCustomAnimations(R.anim.enter_enter, R.anim.enter_exit, R.anim.exit_enter, R.anim.exit_exit)
-//        val fc = EventDetailFragment()
-//        val bundle = Bundle()
-//        bundle.putSerializable("event", dbHelper.eventDao.queryForId(eventId))
-//        fc.arguments = bundle
-//        transaction.replace(R.id.event_fragment, fc)
-//        transaction.addToBackStack(null)
-//        transaction.commit()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.setCustomAnimations(R.anim.enter_enter, R.anim.enter_exit, R.anim.exit_enter, R.anim.exit_exit)
+        val fc = EventDetailFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("event", dbHelper.eventDao.queryForId(eventId))
+        fc.arguments = bundle
+        transaction.replace(R.id.event_fragment, fc)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     //Event Detail

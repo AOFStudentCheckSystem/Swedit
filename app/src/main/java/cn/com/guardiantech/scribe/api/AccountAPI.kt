@@ -1,11 +1,11 @@
-package cn.com.guardiantech.scribe.network
+package cn.com.guardiantech.scribe.api
 
 import com.android.volley.Request
 import com.android.volley.Response
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.database.item.UserItem
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
-import cn.com.guardiantech.scribe.network.request.JsonObjectRequestPeopleCanActuallyUse
+import cn.com.guardiantech.scribe.api.request.JsonObjectRequestPeopleCanActuallyUse
 
 /**
  * Created by liupeiqi on 2017/4/28.
