@@ -5,6 +5,7 @@ import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 import cn.com.guardiantech.scribe.api.AccountAPI
 import cn.com.guardiantech.scribe.api.LoadingManager
+import cn.com.guardiantech.scribe.controller.AccountController
 
 
 /**
@@ -29,8 +30,8 @@ class LoginFragment : android.app.DialogFragment() {
             builder.setTitle("Please Login")
                     .setView(inflater.inflate(R.layout.login_view, null))
                     .setPositiveButton("Login", { dialog, id ->
-                        AccountAPI.login(emailField.text.toString(), passwordField.text.toString()) { success, error ->
-                            Global.bus.post(LoginEvent(success, error ?: "Unknown"))
+                        AccountController.login(emailField.text.toString(), passwordField.text.toString()) {
+
                         }
                         (activity as LoadingManager).startLoading()
                     })

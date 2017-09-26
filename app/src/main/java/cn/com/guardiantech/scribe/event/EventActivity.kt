@@ -18,6 +18,7 @@ import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 import cn.com.guardiantech.scribe.api.AccountAPI
 import cn.com.guardiantech.scribe.api.EventAPI
 import cn.com.guardiantech.scribe.api.LoadingManager
+import cn.com.guardiantech.scribe.controller.AccountController
 import cn.com.guardiantech.scribe.controller.EventController
 
 class EventActivity : DBActivity(),
@@ -44,7 +45,7 @@ class EventActivity : DBActivity(),
             Global.DB.dbHelper.userDao.setObjectCache(true)
 
             EventController.eventDao = Global.DB.dbHelper.eventDao
-            AccountAPI.userDao = Global.DB.dbHelper.userDao
+            AccountController.userDao = Global.DB.dbHelper.userDao
 
             supportFragmentManager.beginTransaction()
                     .add(R.id.event_fragment, EventListFragment()).commit()
