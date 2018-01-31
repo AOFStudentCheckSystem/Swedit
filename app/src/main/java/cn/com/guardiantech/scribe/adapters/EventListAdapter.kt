@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import cn.com.guardiantech.scribe.R
-import cn.com.guardiantech.scribe.database.item.EventItem
+import cn.com.guardiantech.scribe.database.entity.ActivityEvent
+import cn.com.guardiantech.scribe.database.entity.EventStatus
 import cn.com.guardiantech.scribe.util.DateTimeHelper
-import cn.com.guardiantech.scribe.util.parseEventStatus
 import com.j256.ormlite.dao.Dao
 import com.j256.ormlite.stmt.Where
 import java.text.SimpleDateFormat
@@ -19,17 +19,17 @@ import java.util.*
 /**
  * Created by liupeiqi on 2017/4/20.
  */
-class EventListAdapter(private val context: Context?, private val eventDao: Dao<EventItem, String>) : BaseAdapter() {
+class EventListAdapter(private val context: Context?, private val eventDao: Dao<ActivityEvent, String>) : BaseAdapter() {
 
     @android.annotation.SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val newView = convertView
                 ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
-        val event = getItem(position) as EventItem
+        val event = getItem(position) as ActivityEvent
         (newView.findViewById(R.id.event_list_item_title) as TextView).text = event.eventName
         (newView.findViewById(R.id.event_list_item_description) as TextView).text = event.eventDescription
         (newView.findViewById(R.id.event_list_item_time) as TextView).text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
-        (newView.findViewById(R.id.event_list_item_status) as TextView).text = parseEventStatus(event.eventStatus)
+        (newView.findViewById(R.id.event_list_item_status) as TextView).text = event.eventStatus.toString()
         return newView
     }
 
@@ -38,14 +38,14 @@ class EventListAdapter(private val context: Context?, private val eventDao: Dao<
     }
 
     override fun getItemId(position: Int): Long {
-        return (getItem(position) as EventItem).eventId.toLong(36)
+        return (getItem(position) as ActivityEvent).eventId.toLong(36)
     }
 
     override fun getCount(): Int {
         return shownEventsWhere().countOf().toInt()
     }
 
-    private fun shownEventsWhere(position: Int = -1): Where<EventItem, String> {
+    private fun shownEventsWhere(position: Int = -1): Where<ActivityEvent, String> {
         val first = position > 0
         val qb = eventDao.queryBuilder()
                 .orderBy("eventTime", false)
@@ -55,7 +55,7 @@ class EventListAdapter(private val context: Context?, private val eventDao: Dao<
         val isBeforeToday = where.and(
                 where.gt("eventTime", java.util.Date(DateTimeHelper.firstms())),
                 where.lt("eventTime", java.util.Date(DateTimeHelper.lastms())))
-        val isComplete = where.lt("eventStatus", 2)
+        val isComplete = where.eq("eventStatus", EventStatus.COMPLETED)
         where.or(isBeforeToday, isComplete)
         return where
     }

@@ -2,26 +2,56 @@ package cn.com.guardiantech.scribe.controller
 
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.api.API
-import cn.com.guardiantech.scribe.database.item.UserItem
+import cn.com.guardiantech.scribe.api.request.authentication.AuthenticationRequest
+import cn.com.guardiantech.scribe.api.request.authentication.CredentialRequest
+import cn.com.guardiantech.scribe.api.request.authentication.PrincipalRequest
+import cn.com.guardiantech.scribe.database.entity.CredentialType
+import cn.com.guardiantech.scribe.database.entity.PrincipalType
+import cn.com.guardiantech.scribe.database.entity.Session
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 import com.j256.ormlite.dao.Dao
+import java.util.regex.Pattern
 
 /**
  * Created by liupeiqi on 2017/9/26.
  */
 class AccountController {
     companion object {
-        lateinit var userDao: Dao<UserItem, String>
+        lateinit var sessionDao: Dao<Session, String>
+        private val emailPattern = Pattern.compile("^[^@]*[^ ]?@(?:[a-zA-Z0-9\\-]*?\\.[a-zA-Z]{2,}?)+?\$")
+        private val usernamePattern = Pattern.compile("^[a-zA-Z]")
 
-        fun login(email: String, password: String, callback: () -> Unit) {
-            API.login(email, password) { success, error, userObject ->
+        private fun principalTypeOf(str: String): PrincipalType {
+            if (emailPattern.matcher(str).matches()) return PrincipalType.EMAIL
+            if (usernamePattern.matcher(str).matches()) return PrincipalType.USERNAME
+            return PrincipalType.PHONE
+        }
+
+        private fun credentialTypeOf(str: String): CredentialType {
+            return CredentialType.PASSWORD
+        }
+
+        fun login(principal: String, credential: String, callback: (success: Boolean) -> Unit) {
+            API.login(
+                    AuthenticationRequest(
+                            PrincipalRequest(
+                                    type = principalTypeOf(principal),
+                                    identification = principal
+                            ),
+                            CredentialRequest(
+                                    type = credentialTypeOf(credential),
+                                    secret = credential
+                            )
+                    )
+            ) { success, error, session ->
                 if (success) {
-                    userDao.createOrUpdate(userObject)
+                    sessionDao.createOrUpdate(session)
+                    API.apiHeaders["Authorization"] = session!!.sessionKey
                 }
-                Global.bus.post(DBChangeEvent("users"))
+                Global.bus.post(DBChangeEvent("session"))
                 Global.bus.post(LoginEvent(success, error ?: "Unknown"))
-                callback()
+                callback(success)
             }
         }
     }

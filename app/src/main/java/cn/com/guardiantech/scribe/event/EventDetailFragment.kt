@@ -9,15 +9,14 @@ import android.widget.TextView
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.DBFragment
 import cn.com.guardiantech.scribe.R
-import cn.com.guardiantech.scribe.database.item.EventItem
+import cn.com.guardiantech.scribe.database.entity.ActivityEvent
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
-import cn.com.guardiantech.scribe.util.parseEventStatus
 import java.text.SimpleDateFormat
 import java.util.*
 
 class EventDetailFragment : DBFragment() {
     private lateinit var master: EventDetailFragment.OnEventDetailChangeListener
-    private lateinit var event: EventItem
+    private lateinit var event: ActivityEvent
 
     private lateinit var eventId: TextView
     private lateinit var eventName: TextView
@@ -29,7 +28,7 @@ class EventDetailFragment : DBFragment() {
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_event_detail, container, false)
 
-        event = arguments?.getSerializable("event") as EventItem
+        event = arguments?.getSerializable("event") as ActivityEvent
 
         eventId = rootView.findViewById(R.id.event_detail_eventId)
         eventName = rootView.findViewById(R.id.event_detail_eventName)
@@ -55,7 +54,7 @@ class EventDetailFragment : DBFragment() {
             eventName.text = event.eventName
             eventTime.text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
             eventDescription.text = event.eventDescription
-            eventStatus.text = parseEventStatus(event.eventStatus)
+            eventStatus.text = event.eventStatus.toString()
         }
     }
 

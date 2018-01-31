@@ -2,7 +2,7 @@ package cn.com.guardiantech.scribe.controller
 
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.api.API
-import cn.com.guardiantech.scribe.database.item.EventItem
+import cn.com.guardiantech.scribe.database.entity.ActivityEvent
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import com.j256.ormlite.dao.Dao
 
@@ -11,11 +11,11 @@ import com.j256.ormlite.dao.Dao
  */
 class EventController {
     companion object {
-        lateinit var eventDao: Dao<EventItem, String>
+        lateinit var eventDao: Dao<ActivityEvent, String>
 
         fun syncEventList(callback: () -> Unit = {}) {
             API.fetchEventList { success, remoteEvents ->
-                //            TableUtils.clearTable(eventDao.connectionSource, EventItem::class.java)
+                //            TableUtils.clearTable(eventDao.connectionSource, ActivityEvent::class.java)
                 val localEvents = eventDao.queryForAll()
                 remoteEvents.forEach {
                     eventDao.createOrUpdate(it)

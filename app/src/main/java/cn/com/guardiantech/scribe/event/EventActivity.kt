@@ -2,21 +2,25 @@ package cn.com.guardiantech.scribe.event
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
+import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.R
-import cn.com.guardiantech.scribe.account.LoginFragment
 import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.api.LoadingManager
 import cn.com.guardiantech.scribe.controller.AccountController
 import cn.com.guardiantech.scribe.controller.EventController
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
+import cn.com.guardiantech.scribe.util.setString
 
 class EventActivity : DBActivity(),
         EventListFragment.OnEventListSelectedListener,
@@ -26,6 +30,11 @@ class EventActivity : DBActivity(),
     private val TAG = "EVENT_ACTIVITY"
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
+
+    private lateinit var loginLayout: View
+    private lateinit var emailField: EditText
+    private lateinit var passwordField: EditText
+    private lateinit var loginDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +49,13 @@ class EventActivity : DBActivity(),
             dbHelper.userDao.setObjectCache(true)
 
             EventController.eventDao = dbHelper.eventDao
-            AccountController.userDao = dbHelper.userDao
+            AccountController.sessionDao = dbHelper.userDao
 
             API.context = applicationContext
+
+            loginLayout = layoutInflater.inflate(R.layout.login_view, null, false)
+            emailField = loginLayout.findViewById(R.id.login_view_email)
+            passwordField = loginLayout.findViewById(R.id.login_view_password)
 
             supportFragmentManager.beginTransaction()
                     .add(R.id.event_fragment, EventListFragment()).commit()
@@ -66,7 +79,23 @@ class EventActivity : DBActivity(),
     }
 
     private fun onDrawerHeaderClick() {
-        LoginFragment().show(fragmentManager, null)
+        if (!::loginDialog.isInitialized) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Please Login")
+                    .setView(loginLayout)
+                    .setPositiveButton("Login", { dialog, id ->
+                        AccountController.login(emailField.text.toString(), passwordField.text.toString()) { success ->
+                            passwordField.setString("")
+                            if (success) {
+                                emailField.setString("")
+                            }
+                        }
+                        startLoading()
+                    })
+                    .setNegativeButton("Cancel", { _, _ -> })
+            loginDialog = builder.create()
+        }
+        loginDialog.show()
     }
 
     override fun onLogin(login: LoginEvent) {
@@ -74,6 +103,14 @@ class EventActivity : DBActivity(),
 
         } else {
             Toast.makeText(applicationContext, "Login Failed: ${login.error}", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed(
+                    {
+                        if (!loginDialog.isShowing) {
+                            loginDialog.show()
+                        }
+                    },
+                    500)
+
         }
         stopLoading()
     }

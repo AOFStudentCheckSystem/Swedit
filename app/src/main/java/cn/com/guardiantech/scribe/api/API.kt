@@ -5,9 +5,11 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import cn.com.guardiantech.scribe.Global
-import cn.com.guardiantech.scribe.database.item.EventItem
-import cn.com.guardiantech.scribe.database.item.UserItem
+import cn.com.guardiantech.scribe.api.request.authentication.AuthenticationRequest
+import cn.com.guardiantech.scribe.database.entity.ActivityEvent
+import cn.com.guardiantech.scribe.database.entity.Session
 import com.android.volley.*
+import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
@@ -18,10 +20,13 @@ import org.json.JSONObject
  */
 class API {
     companion object {
-        const val BASE_URL = "https://api.aofactivities.com"
+        //        const val BASE_URL = "https://api.aofactivities.com"
+        const val BASE_URL = "http://10.0.2.2:9080"
 
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context
+
+        val apiHeaders = mutableMapOf<String, String>()
 
         private val queue: RequestQueue by lazy {
             val q = Volley.newRequestQueue(context)
@@ -29,42 +34,54 @@ class API {
             q
         }
 
-        fun login(email: String, password: String, callback: (success: Boolean, error: String?, userObject: UserItem?) -> Unit) {
-            val map = JSONObject()
-            map.put("email", email)
-            map.put("password", password)
-            val loginRequest = JsonObjectRequest(Request.Method.POST, "$BASE_URL/auth/auth", map,
+        fun login(authRequest: AuthenticationRequest, callback: (success: Boolean, error: String?, sessionObject: Session?) -> Unit) {
+            val requestBody = Global.mapper.writeValueAsString(authRequest)
+            Log.v("login requestBody", requestBody)
+            val loginRequest = object : JsonObjectRequest(
+                    Request.Method.POST,
+                    "$BASE_URL/auth/auth",
+                    JSONObject(requestBody),
                     Response.Listener { resp ->
-                        Log.w("AccountAPILoginSuccess", resp.toString())
-                        val user = resp.getJSONObject("user")
-//                    if (user.optJSONObject("student") === null) {
-//                        callback(false, null)
-//                    }
-                        callback(true, null, Global.mapper.readValue(user.toString(), UserItem::class.java))
+                        val deserializedSession = resp.toString()
+                        Log.v("AccountAPILoginSuccess", deserializedSession)
+                        callback(true, null, Global.mapper.readValue(deserializedSession, Session::class.java))
                     },
                     Response.ErrorListener { e ->
                         callback(false, handle(e), null)
-                    })
+                    }
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return apiHeaders
+                }
+            }
+
             queue.add(loginRequest)
         }
 
-        fun fetchEventList(callback: (success: Boolean, remoteEvents: List<EventItem>) -> Unit) {
-            val request = JsonObjectRequest(Request.Method.GET, "$BASE_URL/event/listall", null,
-                    Response.Listener { response ->
-                        val eventArray = response.getJSONArray("content")
-//                    println("fetchEventList" + eventArray.toString())
+        fun fetchEventList(callback: (success: Boolean, remoteEvents: List<ActivityEvent>) -> Unit) {
+            val request = object : JsonArrayRequest(
+                    Request.Method.GET,
+                    "$BASE_URL/checkin/event/listall",
+                    null,
+                    Response.Listener { eventArray ->
+                        Log.v("fetchEventListSuccess", eventArray.toString())
                         callback(true, (0 until eventArray.length())
-                                .map { Global.mapper.readValue(eventArray.getJSONObject(it).toString(), EventItem::class.java) }
+                                .map { Global.mapper.readValue(eventArray.getJSONObject(it).toString(), ActivityEvent::class.java) }
                         )
                     },
                     Response.ErrorListener {
-                        Toast.makeText(context, "An error occured when updating events!", Toast.LENGTH_SHORT).show()
+                        Log.w("fetchEventListFail!", it)
+                        Toast.makeText(context, "An error occurred when updating events!", Toast.LENGTH_SHORT).show()
                         callback(false, listOf())
-                    })
+                    }) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return apiHeaders
+                }
+            }
             queue.add(request)
         }
 
-        fun handle(error: VolleyError): String? {
+        private fun handle(error: VolleyError): String? {
             error.networkResponse?.let {
                 when (it) {
                     is NoConnectionError -> {

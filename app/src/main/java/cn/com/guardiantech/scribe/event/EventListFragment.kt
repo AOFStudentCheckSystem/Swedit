@@ -12,7 +12,7 @@ import cn.com.guardiantech.scribe.DBFragment
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.adapters.EventListAdapter
 import cn.com.guardiantech.scribe.controller.EventController
-import cn.com.guardiantech.scribe.database.item.EventItem
+import cn.com.guardiantech.scribe.database.entity.ActivityEvent
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import com.j256.ormlite.dao.Dao
 
@@ -22,7 +22,7 @@ import com.j256.ormlite.dao.Dao
 class EventListFragment : DBFragment(),
         SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener {
-    private lateinit var eventDao: Dao<EventItem, String>
+    private lateinit var eventDao: Dao<ActivityEvent, String>
     private lateinit var mAdapter: EventListAdapter
     private lateinit var mSwipeLayout: SwipeRefreshLayout
     private lateinit var master: EventListFragment.OnEventListSelectedListener

@@ -37,6 +37,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile group: 'com.j256.ormlite', name: 'ormlite-core', version: '4.45'
     compile group: 'com.j256.ormlite', name: 'ormlite-android', version: '4.45'
