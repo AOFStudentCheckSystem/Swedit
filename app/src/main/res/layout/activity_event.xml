@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/activity_event_drawer"
+<android.support.v4.widget.DrawerLayout android:id="@+id/activity_event_drawer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -56,7 +55,6 @@
         android:background="@android:color/white"
         android:layout_height="match_parent"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu">
-    </android.support.design.widget.NavigationView>
+        app:menu="@menu/drawer_menu"></android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

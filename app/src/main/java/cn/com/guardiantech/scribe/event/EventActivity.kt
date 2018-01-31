@@ -11,15 +11,12 @@ import android.widget.TextView
 import android.widget.Toast
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.R
-import cn.com.guardiantech.scribe.Global
-import cn.com.guardiantech.scribe.Global.DB.dbHelper
 import cn.com.guardiantech.scribe.account.LoginFragment
-import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
-import cn.com.guardiantech.scribe.api.AccountAPI
-import cn.com.guardiantech.scribe.api.EventAPI
+import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.api.LoadingManager
 import cn.com.guardiantech.scribe.controller.AccountController
 import cn.com.guardiantech.scribe.controller.EventController
+import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 
 class EventActivity : DBActivity(),
         EventListFragment.OnEventListSelectedListener,
@@ -34,36 +31,36 @@ class EventActivity : DBActivity(),
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_event)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
 
         if (savedInstanceState === null) {
             setSupportActionBar(toolbar)
 
-            Global.init(applicationContext)
+            dbHelper.eventDao.setObjectCache(true)
+            dbHelper.userDao.setObjectCache(true)
 
-            Global.DB.dbHelper.eventDao.setObjectCache(true)
-            Global.DB.dbHelper.userDao.setObjectCache(true)
+            EventController.eventDao = dbHelper.eventDao
+            AccountController.userDao = dbHelper.userDao
 
-            EventController.eventDao = Global.DB.dbHelper.eventDao
-            AccountController.userDao = Global.DB.dbHelper.userDao
+            API.context = applicationContext
 
             supportFragmentManager.beginTransaction()
                     .add(R.id.event_fragment, EventListFragment()).commit()
         }
 
-        drawer = findViewById(R.id.activity_event_drawer) as DrawerLayout
+        drawer = findViewById(R.id.activity_event_drawer)
         toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        val navHeader = (findViewById(R.id.drawer_navigation) as NavigationView).getHeaderView(0)
+        val navHeader = findViewById<NavigationView>(R.id.drawer_navigation).getHeaderView(0)
 
-        (navHeader.findViewById(R.id.drawer_header_avatar) as ImageView).setOnClickListener {
+        (navHeader.findViewById<ImageView>(R.id.drawer_header_avatar)).setOnClickListener {
             onDrawerHeaderClick()
         }
 
-        (navHeader.findViewById(R.id.drawer_header_username) as TextView).setOnClickListener {
+        (navHeader.findViewById<TextView>(R.id.drawer_header_username)).setOnClickListener {
             onDrawerHeaderClick()
         }
     }
@@ -72,7 +69,7 @@ class EventActivity : DBActivity(),
         LoginFragment().show(fragmentManager, null)
     }
 
-    override fun onLogin (login: LoginEvent) {
+    override fun onLogin(login: LoginEvent) {
         if (login.success) {
 
         } else {
@@ -102,15 +99,18 @@ class EventActivity : DBActivity(),
 
     //Event Detail
     override fun onEventDetailEdit() {}
+
     override fun onEventDetailBack() {}
 
     //Loading Manager
     private var loadingDialog: ProgressDialog? = null
-    override fun startLoading () {
+
+    override fun startLoading() {
         if (loadingDialog === null)
             loadingDialog = ProgressDialog.show(this, "", "Loading, Please wait...", true)
     }
-    override fun stopLoading () {
+
+    override fun stopLoading() {
         loadingDialog?.let {
             it.dismiss()
             loadingDialog = null

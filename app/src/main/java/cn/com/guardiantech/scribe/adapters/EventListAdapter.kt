@@ -10,11 +10,12 @@ import java.util.*
 /**
  * Created by liupeiqi on 2017/4/20.
  */
-class EventListAdapter(private val context: android.content.Context, private val eventDao: com.j256.ormlite.dao.Dao<EventItem, String>) : android.widget.BaseAdapter() {
+class EventListAdapter(private val context: android.content.Context?, private val eventDao: com.j256.ormlite.dao.Dao<EventItem, String>) : android.widget.BaseAdapter() {
 
     @android.annotation.SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup?): android.view.View {
-        val newView = convertView ?: android.view.LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
+        val newView = convertView
+                ?: android.view.LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
         val event = getItem(position) as EventItem
         (newView.findViewById(R.id.event_list_item_title) as android.widget.TextView).text = event.eventName
         (newView.findViewById(R.id.event_list_item_description) as android.widget.TextView).text = event.eventDescription
@@ -35,7 +36,7 @@ class EventListAdapter(private val context: android.content.Context, private val
         return shownEventsWhere().countOf().toInt()
     }
 
-    fun shownEventsWhere(position: Int = -1): com.j256.ormlite.stmt.Where<EventItem, String> {
+    private fun shownEventsWhere(position: Int = -1): com.j256.ormlite.stmt.Where<EventItem, String> {
         val first = position > 0
         val qb = eventDao.queryBuilder()
                 .orderBy("eventTime", false)

@@ -1,11 +1,10 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context="guardiantech.com.cn.scribe.cn.com.guardiantech.scribe.event.EventActivity">
     <!--<item-->
-        <!--android:id="@+id/drawer_menu_login_button"-->
+    <!--android:id="@+id/drawer_menu_login_button"-->
 
-        <!--android:title="Log In"/>-->
+    <!--android:title="Log In"/>-->
     <!--<item-->
-        <!--android:id="@+id/drawer_menu_logout_button"-->
-        <!--android:title="Log Out"/>-->
+    <!--android:id="@+id/drawer_menu_logout_button"-->
+    <!--android:title="Log Out"/>-->
 </menu>

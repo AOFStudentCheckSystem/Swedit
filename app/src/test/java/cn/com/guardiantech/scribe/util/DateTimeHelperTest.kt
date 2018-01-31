@@ -1,18 +1,18 @@
 package cn.com.guardiantech.scribe.util
 
-import cn.com.guardiantech.scribe.util.DateTimeHelper
-import org.junit.Test
+import junit.framework.Assert.assertTrue
 
 /**
  * Created by liupeiqi on 2017/4/28.
  */
 class DateTimeHelperTest {
     @org.junit.Test
-    fun testToday () {
+    fun testToday() {
         val t = System.currentTimeMillis()
         println("Current:" + t)
-        println("Local:" + cn.com.guardiantech.scribe.util.DateTimeHelper.firstms(true, t))
-        println("UTC:" + cn.com.guardiantech.scribe.util.DateTimeHelper.firstms(false, t))
-        assert(cn.com.guardiantech.scribe.util.DateTimeHelper.firstms(false, t) == t % 86400000)
+        val localFirstMs = cn.com.guardiantech.scribe.util.DateTimeHelper.firstms(t)
+        println("LocalFirstMs:" + cn.com.guardiantech.scribe.util.DateTimeHelper.firstms(t))
+//        assertTrue((localFirstMs % 86400000 == 68400000L) || (localFirstMs % 86400000 == 18000000L))
+        assertTrue(localFirstMs <= t)
     }
 }

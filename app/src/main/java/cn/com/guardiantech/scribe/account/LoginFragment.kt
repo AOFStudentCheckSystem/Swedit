@@ -1,9 +1,6 @@
 package cn.com.guardiantech.scribe.account
 
-import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.R
-import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
-import cn.com.guardiantech.scribe.api.AccountAPI
 import cn.com.guardiantech.scribe.api.LoadingManager
 import cn.com.guardiantech.scribe.controller.AccountController
 
@@ -16,8 +13,8 @@ class LoginFragment : android.app.DialogFragment() {
     private lateinit var passwordField: android.widget.EditText
     override fun onCreateView(inflater: android.view.LayoutInflater?, container: android.view.ViewGroup?, savedInstanceState: android.os.Bundle?): android.view.View? {
         val rootView = inflater!!.inflate(R.layout.login_view, container, false)
-        emailField = rootView.findViewById(R.id.login_view_email) as android.widget.EditText
-        passwordField = rootView.findViewById(R.id.login_view_password) as android.widget.EditText
+        emailField = rootView.findViewById(R.id.login_view_email)
+        passwordField = rootView.findViewById(R.id.login_view_password)
         return rootView
     }
 

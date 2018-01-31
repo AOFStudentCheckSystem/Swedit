@@ -20,7 +20,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:width="100dp"/>
+            android:width="100dp" />
 
         <TextView
             android:id="@+id/event_detail_eventId"
@@ -44,7 +44,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:width="100dp"/>
+            android:width="100dp" />
 
         <TextView
             android:id="@+id/event_detail_eventName"
@@ -68,7 +68,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:width="100dp"/>
+            android:width="100dp" />
 
         <TextView
             android:id="@+id/event_detail_eventTime"
@@ -92,7 +92,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:width="100dp"/>
+            android:width="100dp" />
 
         <TextView
             android:id="@+id/event_detail_eventDescription"
@@ -116,7 +116,7 @@
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textAlignment="center"
-            android:width="100dp"/>
+            android:width="100dp" />
 
         <TextView
             android:id="@+id/event_detail_eventStatus"

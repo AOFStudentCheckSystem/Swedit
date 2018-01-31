@@ -6,13 +6,14 @@
     tools:context="guardiantech.com.cn.scribe.cn.com.guardiantech.scribe.event.EventListFragment"
     tools:layout_editor_absoluteY="137dp"
     tools:layout_editor_absoluteX="0dp"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/event_list_refresh"
         android:layout_weight="1">
+
         <ListView
             android:id="@+id/event_list_view"
             android:layout_width="match_parent"

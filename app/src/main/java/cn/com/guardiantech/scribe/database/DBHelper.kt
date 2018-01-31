@@ -8,7 +8,7 @@ import cn.com.guardiantech.scribe.database.item.UserItem
  * Created by liupeiqi on 2017/4/24.
  */
 
-class DBHelper(context: android.content.Context) : com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper(context, Global.DB.DB_NAME, null, Global.DB.DB_VERSION) {
+class DBHelper(context: android.content.Context) : com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper(context, Global.DB_NAME, null, Global.DB_VERSION) {
 
     val eventDao by lazy { getDao(EventItem::class.java) as com.j256.ormlite.dao.Dao<EventItem, String> }
     val eventRuntimeDao by lazy { getRuntimeExceptionDao(EventItem::class.java) as com.j256.ormlite.dao.RuntimeExceptionDao<EventItem, String> }
