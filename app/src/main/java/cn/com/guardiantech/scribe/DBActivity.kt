@@ -1,17 +1,20 @@
 package cn.com.guardiantech.scribe
 
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import cn.com.guardiantech.scribe.database.DBHelper
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
+import com.google.common.eventbus.Subscribe
 import com.j256.ormlite.android.apptools.OpenHelperManager
 
 /**
  * Created by liupeiqi on 2017/4/26.
  */
 
-open class DBActivity(val withBus: Boolean = true) : android.support.v7.app.AppCompatActivity() {
+open class DBActivity(private val withBus: Boolean = true) : AppCompatActivity() {
     lateinit var dbHelper: DBHelper
 
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (withBus) Global.bus.register(this)
         dbHelper = OpenHelperManager.getHelper(applicationContext, DBHelper::class.java)
@@ -25,7 +28,7 @@ open class DBActivity(val withBus: Boolean = true) : android.support.v7.app.AppC
         }
     }
 
-    @com.google.common.eventbus.Subscribe
+    @Subscribe
     open fun onLogin(login: LoginEvent) {
     }
 }

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="guardiantech.com.cn.scribe.cn.com.guardiantech.scribe.event.EventDetailFragment"
+    tools:context="cn.com.guardiantech.scribe.event.EventDetailFragment"
     android:orientation="vertical"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp">

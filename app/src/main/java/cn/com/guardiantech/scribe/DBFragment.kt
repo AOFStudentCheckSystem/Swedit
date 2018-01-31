@@ -1,11 +1,13 @@
 package cn.com.guardiantech.scribe
 
+import android.os.Bundle
+import android.support.v4.app.Fragment
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 
 /**
  * Created by liupeiqi on 2017/4/25.
  */
-open class DBFragment : android.support.v4.app.Fragment() {
+open class DBFragment : Fragment() {
 
     var withBus = true
         set(newVal) {
@@ -17,7 +19,7 @@ open class DBFragment : android.support.v4.app.Fragment() {
             }
         }
 
-    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (withBus) Global.bus.register(this)
     }

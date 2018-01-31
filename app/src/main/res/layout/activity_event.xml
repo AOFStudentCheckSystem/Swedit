@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context="guardiantech.com.cn.scribe.cn.com.guardiantech.scribe.event.EventActivity">
+            tools:context="cn.com.guardiantech.scribe.event.EventActivity">
 
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"

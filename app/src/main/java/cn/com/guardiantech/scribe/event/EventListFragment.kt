@@ -1,34 +1,41 @@
 package cn.com.guardiantech.scribe.event
 
+import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ListView
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.DBFragment
-import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.adapters.EventListAdapter
 import cn.com.guardiantech.scribe.controller.EventController
 import cn.com.guardiantech.scribe.database.item.EventItem
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
+import com.j256.ormlite.dao.Dao
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class EventListFragment : DBFragment(),
-        android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener,
-        android.widget.AdapterView.OnItemClickListener {
-    private lateinit var eventDao: com.j256.ormlite.dao.Dao<EventItem, String>
+        SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener {
+    private lateinit var eventDao: Dao<EventItem, String>
     private lateinit var mAdapter: EventListAdapter
-    private lateinit var mSwipeLayout: android.support.v4.widget.SwipeRefreshLayout
+    private lateinit var mSwipeLayout: SwipeRefreshLayout
     private lateinit var master: EventListFragment.OnEventListSelectedListener
     private var refreshing = false
 
-    override fun onCreateView(inflater: android.view.LayoutInflater, container: android.view.ViewGroup?,
-                              savedInstanceState: android.os.Bundle?): android.view.View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_event_list, container, false)
 
         eventDao = (activity as DBActivity).dbHelper.eventDao
 
         mAdapter = EventListAdapter(context, eventDao)
-        val listView: android.widget.ListView = rootView.findViewById(R.id.event_list_view)
+        val listView: ListView = rootView.findViewById(R.id.event_list_view)
         listView.adapter = mAdapter
         listView.onItemClickListener = this
 

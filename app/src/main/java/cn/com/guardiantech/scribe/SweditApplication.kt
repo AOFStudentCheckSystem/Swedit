@@ -1,5 +1,7 @@
 package cn.com.guardiantech.scribe
 
+import android.app.Application
+
 //import android.app.Application
 //import com.j256.ormlite.android.apptools.OpenHelperManager
 //import com.umeng.message.IUmengRegisterCallback
@@ -9,7 +11,7 @@ package cn.com.guardiantech.scribe
 /**
  * Created by liupeiqi on 2017/5/2.
  */
-class SweditApplication : android.app.Application() {
+class SweditApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 //

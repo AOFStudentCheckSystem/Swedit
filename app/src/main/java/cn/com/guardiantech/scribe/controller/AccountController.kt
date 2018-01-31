@@ -5,16 +5,17 @@ import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.database.item.UserItem
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
+import com.j256.ormlite.dao.Dao
 
 /**
  * Created by liupeiqi on 2017/9/26.
  */
 class AccountController {
     companion object {
-        lateinit var userDao: com.j256.ormlite.dao.Dao<UserItem, String>
+        lateinit var userDao: Dao<UserItem, String>
 
-        fun login(email: String, passowrd: String, callback: () -> Unit) {
-            API.login(email, passowrd) { success, error, userObject ->
+        fun login(email: String, password: String, callback: () -> Unit) {
+            API.login(email, password) { success, error, userObject ->
                 if (success) {
                     userDao.createOrUpdate(userObject)
                 }

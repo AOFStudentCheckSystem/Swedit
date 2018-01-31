@@ -1,26 +1,35 @@
 package cn.com.guardiantech.scribe.adapters
 
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.BaseAdapter
+import android.widget.TextView
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.database.item.EventItem
 import cn.com.guardiantech.scribe.util.DateTimeHelper
 import cn.com.guardiantech.scribe.util.parseEventStatus
+import com.j256.ormlite.dao.Dao
+import com.j256.ormlite.stmt.Where
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 /**
  * Created by liupeiqi on 2017/4/20.
  */
-class EventListAdapter(private val context: android.content.Context?, private val eventDao: com.j256.ormlite.dao.Dao<EventItem, String>) : android.widget.BaseAdapter() {
+class EventListAdapter(private val context: Context?, private val eventDao: Dao<EventItem, String>) : BaseAdapter() {
 
     @android.annotation.SuppressLint("InflateParams", "ViewHolder")
-    override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup?): android.view.View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val newView = convertView
-                ?: android.view.LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
+                ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
         val event = getItem(position) as EventItem
-        (newView.findViewById(R.id.event_list_item_title) as android.widget.TextView).text = event.eventName
-        (newView.findViewById(R.id.event_list_item_description) as android.widget.TextView).text = event.eventDescription
-        (newView.findViewById(R.id.event_list_item_time) as android.widget.TextView).text = java.text.SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
-        (newView.findViewById(R.id.event_list_item_status) as android.widget.TextView).text = parseEventStatus(event.eventStatus)
+        (newView.findViewById(R.id.event_list_item_title) as TextView).text = event.eventName
+        (newView.findViewById(R.id.event_list_item_description) as TextView).text = event.eventDescription
+        (newView.findViewById(R.id.event_list_item_time) as TextView).text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
+        (newView.findViewById(R.id.event_list_item_status) as TextView).text = parseEventStatus(event.eventStatus)
         return newView
     }
 
@@ -36,7 +45,7 @@ class EventListAdapter(private val context: android.content.Context?, private va
         return shownEventsWhere().countOf().toInt()
     }
 
-    private fun shownEventsWhere(position: Int = -1): com.j256.ormlite.stmt.Where<EventItem, String> {
+    private fun shownEventsWhere(position: Int = -1): Where<EventItem, String> {
         val first = position > 0
         val qb = eventDao.queryBuilder()
                 .orderBy("eventTime", false)

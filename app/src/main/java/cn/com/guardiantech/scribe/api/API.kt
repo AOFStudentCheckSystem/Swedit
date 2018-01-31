@@ -7,9 +7,7 @@ import android.widget.Toast
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.database.item.EventItem
 import cn.com.guardiantech.scribe.database.item.UserItem
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
@@ -66,16 +64,16 @@ class API {
             queue.add(request)
         }
 
-        fun handle(error: com.android.volley.VolleyError): String? {
+        fun handle(error: VolleyError): String? {
             error.networkResponse?.let {
                 when (it) {
-                    is com.android.volley.NoConnectionError -> {
+                    is NoConnectionError -> {
                         return "Network Error, please retry!"
                     }
-                    is com.android.volley.TimeoutError -> {
+                    is TimeoutError -> {
                         return "Network Error, please retry!"
                     }
-                    is com.android.volley.ParseError -> {
+                    is ParseError -> {
                         return "Network Error, please retry!"
                     }
                     else -> {

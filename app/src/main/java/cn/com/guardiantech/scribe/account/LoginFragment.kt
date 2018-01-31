@@ -1,5 +1,13 @@
 package cn.com.guardiantech.scribe.account
 
+import android.app.Dialog
+import android.app.DialogFragment
+import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.api.LoadingManager
 import cn.com.guardiantech.scribe.controller.AccountController
@@ -8,22 +16,22 @@ import cn.com.guardiantech.scribe.controller.AccountController
 /**
  * Created by liupeiqi on 2017/4/28.
  */
-class LoginFragment : android.app.DialogFragment() {
-    private lateinit var emailField: android.widget.EditText
-    private lateinit var passwordField: android.widget.EditText
-    override fun onCreateView(inflater: android.view.LayoutInflater?, container: android.view.ViewGroup?, savedInstanceState: android.os.Bundle?): android.view.View? {
+class LoginFragment : DialogFragment() {
+    private lateinit var emailField: EditText
+    private lateinit var passwordField: EditText
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.login_view, container, false)
         emailField = rootView.findViewById(R.id.login_view_email)
         passwordField = rootView.findViewById(R.id.login_view_password)
         return rootView
     }
 
-    override fun onCreateDialog(savedInstanceState: android.os.Bundle?): android.app.Dialog {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (savedInstanceState !== null) {
             return super.onCreateDialog(savedInstanceState)
         } else {
             val inflater = activity.layoutInflater
-            val builder = android.support.v7.app.AlertDialog.Builder(activity)
+            val builder = AlertDialog.Builder(activity)
             builder.setTitle("Please Login")
                     .setView(inflater.inflate(R.layout.login_view, null))
                     .setPositiveButton("Login", { dialog, id ->

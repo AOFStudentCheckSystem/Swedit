@@ -4,13 +4,14 @@ import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.database.item.EventItem
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
+import com.j256.ormlite.dao.Dao
 
 /**
  * Created by liupeiqi on 2017/9/26.
  */
 class EventController {
     companion object {
-        lateinit var eventDao: com.j256.ormlite.dao.Dao<EventItem, String>
+        lateinit var eventDao: Dao<EventItem, String>
 
         fun syncEventList(callback: () -> Unit = {}) {
             API.fetchEventList { success, remoteEvents ->

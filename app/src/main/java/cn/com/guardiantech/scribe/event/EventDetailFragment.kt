@@ -1,26 +1,32 @@
 package cn.com.guardiantech.scribe.event
 
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.DBFragment
-import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.database.item.EventItem
 import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import cn.com.guardiantech.scribe.util.parseEventStatus
+import java.text.SimpleDateFormat
 import java.util.*
 
 class EventDetailFragment : DBFragment() {
     private lateinit var master: EventDetailFragment.OnEventDetailChangeListener
     private lateinit var event: EventItem
 
-    private lateinit var eventId: android.widget.TextView
-    private lateinit var eventName: android.widget.TextView
-    private lateinit var eventTime: android.widget.TextView
-    private lateinit var eventDescription: android.widget.TextView
-    private lateinit var eventStatus: android.widget.TextView
+    private lateinit var eventId: TextView
+    private lateinit var eventName: TextView
+    private lateinit var eventTime: TextView
+    private lateinit var eventDescription: TextView
+    private lateinit var eventStatus: TextView
 
-    override fun onCreateView(inflater: android.view.LayoutInflater, container: android.view.ViewGroup?,
-                              savedInstanceState: android.os.Bundle?): android.view.View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_event_detail, container, false)
 
         event = arguments?.getSerializable("event") as EventItem
@@ -47,7 +53,7 @@ class EventDetailFragment : DBFragment() {
         if (::event.isInitialized) {
             eventId.text = event.eventId
             eventName.text = event.eventName
-            eventTime.text = java.text.SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
+            eventTime.text = SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss", Locale.US).format(event.eventTime)
             eventDescription.text = event.eventDescription
             eventStatus.text = parseEventStatus(event.eventStatus)
         }
@@ -58,13 +64,17 @@ class EventDetailFragment : DBFragment() {
         fun onEventDetailBack()
     }
 
-    override fun onAttach(context: android.content.Context) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        master = context as OnEventDetailChangeListener
+        if (context is OnEventDetailChangeListener) {
+            master = context
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        master.onEventDetailBack()
+        if (::master.isInitialized) {
+            master.onEventDetailBack()
+        }
     }
 }
