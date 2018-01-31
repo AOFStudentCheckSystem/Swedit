@@ -1,16 +1,23 @@
 package cn.com.guardiantech.scribe.database.entity
 
 import cn.com.guardiantech.scribe.util.NoArg
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.j256.ormlite.field.ForeignCollectionField
 import javax.persistence.*
 
 /**
  * Created by liupeiqi on 2017/4/28.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity(name = "session")
 @NoArg
 class Session(
         @Id
+        @GeneratedValue
+        @Column
+        var id: Int,
+
         @Column
         var sessionKey: String,
 
@@ -20,9 +27,13 @@ class Session(
         @Column
         var isAuthenticated: Boolean,
 
-        @ElementCollection(fetch = FetchType.EAGER)
-        @CollectionTable(joinColumns = [(JoinColumn(name = "id"))])
+
+        //TODO: Test Collection
+        @ElementCollection
+        @JoinColumn
         var authenticatedFactors: Collection<CredentialType>,
 
-        var permissions: Boolean
+        @ElementCollection
+        @JoinColumn
+        var permissions: Collection<String>
 )

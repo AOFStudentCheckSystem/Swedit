@@ -21,13 +21,14 @@ class DBHelper(context: Context) : OrmLiteSqliteOpenHelper(context, Global.DB_NA
 
     val eventDao by lazy { getDao(ActivityEvent::class.java) as Dao<ActivityEvent, String> }
     val eventRuntimeDao by lazy { getRuntimeExceptionDao(ActivityEvent::class.java) as RuntimeExceptionDao<ActivityEvent, String> }
-    val userDao by lazy { getDao(Session::class.java) as Dao<Session, String> }
-    val userRuntimeDao by lazy { getRuntimeExceptionDao(Session::class.java) as RuntimeExceptionDao<Session, String> }
+    val sessionDao by lazy { getDao(Session::class.java) as Dao<Session, Int> }
+    val sessionRuntimeDao by lazy { getRuntimeExceptionDao(Session::class.java) as RuntimeExceptionDao<Session, Int> }
 
     override fun onCreate(database: SQLiteDatabase?, connectionSource: ConnectionSource?) {
         try {
             Log.i(DBHelper::class.java.name, "onCreate")
             TableUtils.createTable(connectionSource, ActivityEvent::class.java)
+            TableUtils.createTable(connectionSource, Session::class.java)
         } catch (e: SQLException) {
             Log.e(DBHelper::class.java.name, "Can't create database", e)
             throw RuntimeException(e)
@@ -38,6 +39,7 @@ class DBHelper(context: Context) : OrmLiteSqliteOpenHelper(context, Global.DB_NA
         try {
             Log.i(DBHelper::class.java.name, "onUpgrade")
             TableUtils.dropTable<ActivityEvent, String>(connectionSource, ActivityEvent::class.java, true)
+            TableUtils.dropTable<Session, String>(connectionSource, Session::class.java, true)
             // after we drop the old databases, we create the new ones
             onCreate(database, connectionSource)
         } catch (e: SQLException) {

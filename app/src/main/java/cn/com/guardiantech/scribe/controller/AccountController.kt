@@ -18,13 +18,13 @@ import java.util.regex.Pattern
  */
 class AccountController {
     companion object {
-        lateinit var sessionDao: Dao<Session, String>
+        lateinit var sessionDao: Dao<Session, Int>
         private val emailPattern = Pattern.compile("^[^@]*[^ ]?@(?:[a-zA-Z0-9\\-]*?\\.[a-zA-Z]{2,}?)+?\$")
         private val usernamePattern = Pattern.compile("^[a-zA-Z]")
 
         private fun principalTypeOf(str: String): PrincipalType {
             if (emailPattern.matcher(str).matches()) return PrincipalType.EMAIL
-            if (usernamePattern.matcher(str).matches()) return PrincipalType.USERNAME
+            if (usernamePattern.matcher(str).find(0)) return PrincipalType.USERNAME
             return PrincipalType.PHONE
         }
 

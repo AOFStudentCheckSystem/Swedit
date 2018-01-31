@@ -8,7 +8,6 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.Toolbar
-import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -31,10 +30,10 @@ class EventActivity : DBActivity(),
     private lateinit var drawer: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
-    private lateinit var loginLayout: View
     private lateinit var emailField: EditText
     private lateinit var passwordField: EditText
     private lateinit var loginDialog: AlertDialog
+    private lateinit var usernameDisplay: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,16 +45,12 @@ class EventActivity : DBActivity(),
             setSupportActionBar(toolbar)
 
             dbHelper.eventDao.setObjectCache(true)
-            dbHelper.userDao.setObjectCache(true)
+            dbHelper.sessionDao.setObjectCache(true)
 
             EventController.eventDao = dbHelper.eventDao
-            AccountController.sessionDao = dbHelper.userDao
+            AccountController.sessionDao = dbHelper.sessionDao
 
             API.context = applicationContext
-
-            loginLayout = layoutInflater.inflate(R.layout.login_view, null, false)
-            emailField = loginLayout.findViewById(R.id.login_view_email)
-            passwordField = loginLayout.findViewById(R.id.login_view_password)
 
             supportFragmentManager.beginTransaction()
                     .add(R.id.event_fragment, EventListFragment()).commit()
@@ -73,13 +68,18 @@ class EventActivity : DBActivity(),
             onDrawerHeaderClick()
         }
 
-        (navHeader.findViewById<TextView>(R.id.drawer_header_username)).setOnClickListener {
+        usernameDisplay = navHeader.findViewById(R.id.drawer_header_username)
+
+        usernameDisplay.setOnClickListener {
             onDrawerHeaderClick()
         }
     }
 
     private fun onDrawerHeaderClick() {
         if (!::loginDialog.isInitialized) {
+            val loginLayout = layoutInflater.inflate(R.layout.login_view, null, false)
+            emailField = loginLayout.findViewById(R.id.login_view_email)
+            passwordField = loginLayout.findViewById(R.id.login_view_password)
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Please Login")
                     .setView(loginLayout)
@@ -100,7 +100,7 @@ class EventActivity : DBActivity(),
 
     override fun onLogin(login: LoginEvent) {
         if (login.success) {
-
+            usernameDisplay.text = "Welcome back!"
         } else {
             Toast.makeText(applicationContext, "Login Failed: ${login.error}", Toast.LENGTH_SHORT).show()
             Handler().postDelayed(
