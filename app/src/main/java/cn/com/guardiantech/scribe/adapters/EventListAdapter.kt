@@ -1,5 +1,6 @@
 package cn.com.guardiantech.scribe.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +22,7 @@ import java.util.*
  */
 class EventListAdapter(private val context: Context?, private val eventDao: Dao<ActivityEvent, String>) : BaseAdapter() {
 
-    @android.annotation.SuppressLint("InflateParams", "ViewHolder")
+    @SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val newView = convertView
                 ?: LayoutInflater.from(context).inflate(R.layout.event_list_item, null)
@@ -52,11 +53,11 @@ class EventListAdapter(private val context: Context?, private val eventDao: Dao<
                 .limit(-1L)
         if (first) qb.offset(position.toLong())
         val where = qb.where()
-        val isBeforeToday = where.and(
+        val isToday = where.and(
                 where.gt("eventTime", java.util.Date(DateTimeHelper.firstms())),
                 where.lt("eventTime", java.util.Date(DateTimeHelper.lastms())))
-        val isComplete = where.eq("eventStatus", EventStatus.COMPLETED)
-        where.or(isBeforeToday, isComplete)
+        val isNotComplete = where.ne("eventStatus", EventStatus.COMPLETED)
+        where.or(isToday, isNotComplete)
         return where
     }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/preferences"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <CheckBoxPreference
+        android:key="showAllEvents"
+        android:title="Show All Events"
+        android:summary="Also show non-today completed events"
+        android:defaultValue="false" />
+</PreferenceScreen>

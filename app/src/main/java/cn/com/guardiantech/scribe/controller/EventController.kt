@@ -3,7 +3,6 @@ package cn.com.guardiantech.scribe.controller
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
-import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import com.j256.ormlite.dao.Dao
 
 /**

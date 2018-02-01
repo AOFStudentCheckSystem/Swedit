@@ -17,6 +17,6 @@ object DateTimeHelper {
     }
 
     fun lastms(time: Long = System.currentTimeMillis()): Long {
-        return firstms(time) + 86400000
+        return firstms(time) + 86399999
     }
 }

@@ -2,7 +2,8 @@ package cn.com.guardiantech.scribe
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
+import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
+import com.google.common.eventbus.Subscribe
 
 /**
  * Created by liupeiqi on 2017/4/25.
@@ -29,7 +30,7 @@ open class DBFragment : Fragment() {
         if (withBus) Global.bus.unregister(this)
     }
 
-    @com.google.common.eventbus.Subscribe
-    open fun onDBUpdate(dbUpdate: DBChangeEvent) {
+    @Subscribe
+    open fun onEventsChange(eventsChangeEvent: EventsChangeEvent) {
     }
 }

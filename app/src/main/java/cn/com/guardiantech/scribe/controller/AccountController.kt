@@ -8,8 +8,8 @@ import cn.com.guardiantech.scribe.api.request.authentication.PrincipalRequest
 import cn.com.guardiantech.scribe.database.entity.CredentialType
 import cn.com.guardiantech.scribe.database.entity.PrincipalType
 import cn.com.guardiantech.scribe.database.entity.Session
-import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
+import cn.com.guardiantech.scribe.eventbus.event.SessionChangeEvent
 import com.j256.ormlite.dao.Dao
 import java.util.regex.Pattern
 
@@ -49,7 +49,6 @@ class AccountController {
                     sessionDao.createOrUpdate(session)
                     API.apiHeaders["Authorization"] = session!!.sessionKey
                 }
-                Global.bus.post(DBChangeEvent("session"))
                 Global.bus.post(LoginEvent(success, error ?: "Unknown"))
                 callback(success)
             }

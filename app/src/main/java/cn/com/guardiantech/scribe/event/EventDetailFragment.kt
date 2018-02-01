@@ -6,11 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.DBFragment
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
-import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
+import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,10 +42,18 @@ class EventDetailFragment : DBFragment() {
         return rootView
     }
 
-    override fun onDBUpdate(dbUpdate: DBChangeEvent) {
-        if (dbUpdate.tableName == "events") {
-            event = (activity as DBActivity).dbHelper.eventDao.queryForId(event.eventId)
+    override fun onEventsChange(eventsChangeEvent: EventsChangeEvent) {
+        var delete = true
+        (activity as DBActivity).dbHelper.eventDao.queryForId(event.eventId)?.let {
+            delete = false
+            event = it
             updateFields()
+        }
+        if (delete) {
+            (activity as DBActivity).let {
+                Toast.makeText(it.applicationContext, "", Toast.LENGTH_LONG).show()
+                it.supportFragmentManager.popBackStack()
+            }
         }
     }
 

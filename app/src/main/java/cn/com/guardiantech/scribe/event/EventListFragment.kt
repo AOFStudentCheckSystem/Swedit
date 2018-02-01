@@ -13,7 +13,7 @@ import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.adapters.EventListAdapter
 import cn.com.guardiantech.scribe.controller.EventController
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
-import cn.com.guardiantech.scribe.eventbus.event.DBChangeEvent
+import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import com.j256.ormlite.dao.Dao
 
 /**
@@ -55,10 +55,8 @@ class EventListFragment : DBFragment(),
         }
     }
 
-    override fun onDBUpdate(dbUpdate: DBChangeEvent) {
-        if (dbUpdate.tableName == "events") {
-            mAdapter.notifyDataSetChanged()
-        }
+    override fun onEventsChange(eventsChangeEvent: EventsChangeEvent) {
+        mAdapter.notifyDataSetChanged()
     }
 
     interface OnEventListSelectedListener {

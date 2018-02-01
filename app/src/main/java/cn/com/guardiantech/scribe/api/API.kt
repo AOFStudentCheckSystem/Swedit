@@ -21,7 +21,7 @@ import org.json.JSONObject
 class API {
     companion object {
         //        const val BASE_URL = "https://api.aofactivities.com"
-        const val BASE_URL = "http://10.0.2.2:9080"
+        const val BASE_URL = "http://10.0.1.20:19080"
 
         @SuppressLint("StaticFieldLeak")
         lateinit var context: Context

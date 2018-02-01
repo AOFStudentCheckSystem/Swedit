@@ -3,6 +3,7 @@ package cn.com.guardiantech.scribe
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import cn.com.guardiantech.scribe.database.DBHelper
+import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 import com.google.common.eventbus.Subscribe
 import com.j256.ormlite.android.apptools.OpenHelperManager
@@ -29,6 +30,6 @@ open class DBActivity(private val withBus: Boolean = true) : AppCompatActivity()
     }
 
     @Subscribe
-    open fun onLogin(login: LoginEvent) {
+    open fun onLogin(loginEvent: LoginEvent) {
     }
 }

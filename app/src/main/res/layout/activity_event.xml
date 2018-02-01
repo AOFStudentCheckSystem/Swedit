@@ -35,7 +35,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:text="Action"
-                        android:visibility="gone" />
+                        android:visibility="gone"/>
 
                 </android.support.v7.widget.Toolbar>
 
@@ -55,6 +55,7 @@
         android:background="@android:color/white"
         android:layout_height="match_parent"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu"></android.support.design.widget.NavigationView>
+        app:menu="@menu/drawer_menu">
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

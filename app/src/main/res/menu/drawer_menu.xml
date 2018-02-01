@@ -1,10 +1,9 @@
-<menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="guardiantech.com.cn.scribe.cn.com.guardiantech.scribe.event.EventActivity">
-    <!--<item-->
-    <!--android:id="@+id/drawer_menu_login_button"-->
-
-    <!--android:title="Log In"/>-->
-    <!--<item-->
-    <!--android:id="@+id/drawer_menu_logout_button"-->
-    <!--android:title="Log Out"/>-->
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Settings">
+    </item>
 </menu>
