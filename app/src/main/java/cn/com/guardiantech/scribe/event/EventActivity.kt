@@ -15,7 +15,6 @@ import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.api.LoadingManager
 import cn.com.guardiantech.scribe.controller.AccountController
 import cn.com.guardiantech.scribe.controller.EventController
-import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 import cn.com.guardiantech.scribe.preference.SettingsFragment
 import cn.com.guardiantech.scribe.util.setString
@@ -82,8 +81,8 @@ class EventActivity : DBActivity(),
             onDrawerHeaderClick()
         }
 
-        //Inflate login dialog for later use
-        createLoginDialog()
+        //Login State initialization
+        AccountController.initLoginState()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -93,6 +92,10 @@ class EventActivity : DBActivity(),
     }
 
     private fun onDrawerHeaderClick() {
+        if (loginDialog == null) {
+            //Inflate login dialog for later use
+            createLoginDialog()
+        }
         loginDialog?.show()
     }
 

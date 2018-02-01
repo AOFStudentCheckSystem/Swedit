@@ -21,6 +21,7 @@ class AccountController {
         lateinit var sessionDao: Dao<Session, Int>
         private val emailPattern = Pattern.compile("^[^@]*[^ ]?@(?:[a-zA-Z0-9\\-]*?\\.[a-zA-Z]{2,}?)+?\$")
         private val usernamePattern = Pattern.compile("^[a-zA-Z]")
+        var isLoggedIn = false
 
         private fun principalTypeOf(str: String): PrincipalType {
             if (emailPattern.matcher(str).matches()) return PrincipalType.EMAIL
@@ -30,6 +31,10 @@ class AccountController {
 
         private fun credentialTypeOf(str: String): CredentialType {
             return CredentialType.PASSWORD
+        }
+
+        fun setAuthentication(key: String) {
+            API.apiHeaders["Authorization"] = key
         }
 
         fun login(principal: String, credential: String, callback: (success: Boolean) -> Unit) {
@@ -47,10 +52,19 @@ class AccountController {
             ) { success, error, session ->
                 if (success) {
                     sessionDao.createOrUpdate(session)
-                    API.apiHeaders["Authorization"] = session!!.sessionKey
+                    setAuthentication(session!!.sessionKey)
                 }
                 Global.bus.post(LoginEvent(success, error ?: "Unknown"))
                 callback(success)
+            }
+        }
+
+        fun initLoginState(){
+            val session = sessionDao.find { true }
+            session?.let {
+                AccountController.setAuthentication(it.sessionKey)
+                isLoggedIn = true
+                Global.bus.post(LoginEvent(true, ""))
             }
         }
     }

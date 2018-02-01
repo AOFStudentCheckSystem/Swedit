@@ -2,7 +2,8 @@ package cn.com.guardiantech.scribe.database.entity
 
 import cn.com.guardiantech.scribe.util.NoArg
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.j256.ormlite.field.ForeignCollectionField
+import com.j256.ormlite.field.DataType
+import com.j256.ormlite.field.DatabaseField
 import javax.persistence.*
 
 /**
@@ -27,13 +28,10 @@ class Session(
         @Column
         var isAuthenticated: Boolean,
 
-
         //TODO: Test Collection
-        @ElementCollection
-        @JoinColumn
-        var authenticatedFactors: Collection<CredentialType>,
+        @DatabaseField(dataType = DataType.SERIALIZABLE)
+        var authenticatedFactors: HashSet<CredentialType>,
 
-        @ElementCollection
-        @JoinColumn
-        var permissions: Collection<String>
+        @DatabaseField(dataType = DataType.SERIALIZABLE)
+        var permissions: HashSet<String>
 )
