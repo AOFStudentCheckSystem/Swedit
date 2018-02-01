@@ -2,6 +2,7 @@ package cn.com.guardiantech.scribe.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,17 +48,23 @@ class EventListAdapter(private val context: Context?, private val eventDao: Dao<
     }
 
     private fun shownEventsWhere(position: Int = -1): Where<ActivityEvent, String> {
+        val showAllEvents = context?.getSharedPreferences(context.resources.getString(R.string.global_config_file_name), MODE_PRIVATE)?.getBoolean("showAllEvents", false)
+                ?: false
         val first = position > 0
         val qb = eventDao.queryBuilder()
                 .orderBy("eventTime", false)
                 .limit(-1L)
         if (first) qb.offset(position.toLong())
         val where = qb.where()
-        val isToday = where.and(
-                where.gt("eventTime", java.util.Date(DateTimeHelper.firstms())),
-                where.lt("eventTime", java.util.Date(DateTimeHelper.lastms())))
-        val isNotComplete = where.ne("eventStatus", EventStatus.COMPLETED)
-        where.or(isToday, isNotComplete)
+        if (!showAllEvents) {
+            val isToday = where.and(
+                    where.gt("eventTime", java.util.Date(DateTimeHelper.firstms())),
+                    where.lt("eventTime", java.util.Date(DateTimeHelper.lastms())))
+            val isNotComplete = where.ne("eventStatus", EventStatus.COMPLETED)
+            where.or(isToday, isNotComplete)
+        } else {
+            where.raw("1")
+        }
         return where
     }
 }

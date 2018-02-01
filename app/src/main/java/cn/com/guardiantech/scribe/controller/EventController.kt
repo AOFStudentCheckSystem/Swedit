@@ -3,6 +3,7 @@ package cn.com.guardiantech.scribe.controller
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
+import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import com.j256.ormlite.dao.Dao
 
 /**
@@ -32,7 +33,7 @@ class EventController {
                             it.eventId
                         }
                 eventDao.deleteIds(deletedEventIds)
-                Global.bus.post(DBChangeEvent("events"))
+                Global.bus.post(EventsChangeEvent())
                 callback()
             }
         }

@@ -13,6 +13,7 @@ class SettingsFragment: PreferenceFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        preferenceManager.sharedPreferencesName = getString(R.string.global_config_file_name)
         addPreferencesFromResource(R.xml.preferences)
     }
 }
