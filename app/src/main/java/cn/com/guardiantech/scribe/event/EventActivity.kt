@@ -29,6 +29,7 @@ class EventActivity : DBActivity(),
     private val TAG = "EVENT_ACTIVITY"
     private lateinit var toggle: ActionBarDrawerToggle
 
+    //Login Dialog
     private lateinit var emailField: EditText
     private lateinit var passwordField: EditText
     private var loginDialog: AlertDialog? = null
@@ -64,7 +65,6 @@ class EventActivity : DBActivity(),
 
         }
 
-
         //Add drawer
         toggle = ActionBarDrawerToggle(
                 this, activity_event_drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -91,8 +91,13 @@ class EventActivity : DBActivity(),
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        if (savedInstanceState === null)
-            EventController.syncEventList()
+        if (savedInstanceState === null && dbHelper.eventDao.count() == 0) {
+            if (AccountController.isLoggedIn) {
+                EventController.syncEventList()
+            } else {
+                Toast.makeText(this, "Welcome! Please Login and refresh this event list", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun onDrawerHeaderClick() {

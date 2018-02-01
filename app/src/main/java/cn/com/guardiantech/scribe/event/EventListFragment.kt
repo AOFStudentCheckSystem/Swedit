@@ -1,6 +1,5 @@
 package cn.com.guardiantech.scribe.event
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
@@ -16,6 +15,7 @@ import cn.com.guardiantech.scribe.controller.EventController
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
 import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import com.j256.ormlite.dao.Dao
+import kotlinx.android.synthetic.main.fragment_event_list.*
 
 /**
  * A placeholder fragment containing a simple view.
@@ -25,7 +25,6 @@ class EventListFragment : DBFragment(),
         AdapterView.OnItemClickListener {
     private lateinit var eventDao: Dao<ActivityEvent, String>
     private lateinit var mAdapter: EventListAdapter
-    private lateinit var mSwipeLayout: SwipeRefreshLayout
     private lateinit var master: EventListFragment.OnEventListSelectedListener
     private var refreshing = false
 
@@ -36,22 +35,22 @@ class EventListFragment : DBFragment(),
         eventDao = (activity as DBActivity).dbHelper.eventDao
 
         mAdapter = EventListAdapter(activity, eventDao)
-        val listView: ListView = rootView.findViewById(R.id.event_list_view)
-        listView.adapter = mAdapter
-        listView.onItemClickListener = this
-
-        mSwipeLayout = rootView.findViewById(R.id.event_list_refresh)
-        mSwipeLayout.setOnRefreshListener(this)
+        rootView.findViewById<ListView>(R.id.event_list_view).let {
+            it.adapter = mAdapter
+            it.onItemClickListener = this
+        }
+        rootView.findViewById<SwipeRefreshLayout>(R.id.event_list_refresh)
+                .setOnRefreshListener(this)
         return rootView
     }
 
     override fun onRefresh() {
         if (!refreshing) {
             refreshing = true
-            mSwipeLayout.isRefreshing = true
+            event_list_refresh.isRefreshing = true
             EventController.syncEventList {
                 refreshing = false
-                mSwipeLayout.isRefreshing = false
+                event_list_refresh.isRefreshing = false
             }
         }
     }
