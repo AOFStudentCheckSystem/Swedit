@@ -1,7 +1,7 @@
 package cn.com.guardiantech.scribe
 
+import android.app.Fragment
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
 import com.google.common.eventbus.Subscribe
 

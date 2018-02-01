@@ -1,6 +1,7 @@
 package cn.com.guardiantech.scribe.database.entity
 
 import cn.com.guardiantech.scribe.util.NoArg
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.io.Serializable
 import java.util.*
 import javax.persistence.*
@@ -10,6 +11,7 @@ import javax.persistence.*
  */
 @Entity(name = "activity_event")
 @NoArg
+@JsonIgnoreProperties(ignoreUnknown = true)
 class ActivityEvent(
         @Id
         @Column

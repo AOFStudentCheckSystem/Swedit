@@ -57,9 +57,13 @@ class EventActivity : DBActivity(),
         //Give API context
         API.context = applicationContext
 
-        //Create fragment
-        supportFragmentManager.beginTransaction()
-                .add(R.id.event_fragment, EventListFragment()).commit()
+        if (savedInstanceState == null) {
+            //Create fragment
+            fragmentManager.beginTransaction()
+                    .add(R.id.event_fragment, EventListFragment()).commit()
+
+        }
+
 
         //Add drawer
         toggle = ActionBarDrawerToggle(
@@ -147,6 +151,14 @@ class EventActivity : DBActivity(),
                         .addToBackStack(null)
                         .commit()
             }
+            R.id.nav_event_list -> {
+                Log.v(TAG, "nav_event_list clicked")
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.event_fragment, EventListFragment())
+                        .addToBackStack(null)
+                        .commit()
+            }
         }
         activity_event_drawer.closeDrawers()
         return true
@@ -154,8 +166,7 @@ class EventActivity : DBActivity(),
 
     //Go to event detail
     override fun onEventSelected(eventId: String) {
-        supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.enter_enter, R.anim.enter_exit, R.anim.exit_enter, R.anim.exit_exit)
+        fragmentManager.beginTransaction()
                 .replace(R.id.event_fragment, EventDetailFragment().let {
                     it.arguments = Bundle().let {
                         it.putSerializable("event", dbHelper.eventDao.queryForId(eventId))

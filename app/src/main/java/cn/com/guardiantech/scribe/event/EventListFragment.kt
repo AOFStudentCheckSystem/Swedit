@@ -1,5 +1,6 @@
 package cn.com.guardiantech.scribe.event
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
@@ -34,7 +35,7 @@ class EventListFragment : DBFragment(),
 
         eventDao = (activity as DBActivity).dbHelper.eventDao
 
-        mAdapter = EventListAdapter(context, eventDao)
+        mAdapter = EventListAdapter(activity, eventDao)
         val listView: ListView = rootView.findViewById(R.id.event_list_view)
         listView.adapter = mAdapter
         listView.onItemClickListener = this
@@ -63,12 +64,12 @@ class EventListFragment : DBFragment(),
         fun onEventSelected(eventId: String)
     }
 
-    override fun onAttach(context: android.content.Context) {
-        super.onAttach(context)
-        master = context as EventListFragment.OnEventListSelectedListener
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        master = activity as EventListFragment.OnEventListSelectedListener
     }
 
-    override fun onItemClick(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (!refreshing) master.onEventSelected(id.toString(36))
     }
 

@@ -9,7 +9,6 @@ import cn.com.guardiantech.scribe.database.entity.CredentialType
 import cn.com.guardiantech.scribe.database.entity.PrincipalType
 import cn.com.guardiantech.scribe.database.entity.Session
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
-import cn.com.guardiantech.scribe.eventbus.event.SessionChangeEvent
 import com.j256.ormlite.dao.Dao
 import java.util.regex.Pattern
 
@@ -33,7 +32,7 @@ class AccountController {
             return CredentialType.PASSWORD
         }
 
-        fun setAuthentication(key: String) {
+        private fun setAuthentication(key: String) {
             API.apiHeaders["Authorization"] = key
         }
 
@@ -59,13 +58,11 @@ class AccountController {
             }
         }
 
-        fun initLoginState(){
-            val session = sessionDao.find { true }
-            session?.let {
-                AccountController.setAuthentication(it.sessionKey)
-                isLoggedIn = true
-                Global.bus.post(LoginEvent(true, ""))
-            }
-        }
+        fun initLoginState() =
+                sessionDao.find { true }?.let {
+                    AccountController.setAuthentication(it.sessionKey)
+                    isLoggedIn = true
+                    Global.bus.post(LoginEvent(true, ""))
+                }
     }
 }
