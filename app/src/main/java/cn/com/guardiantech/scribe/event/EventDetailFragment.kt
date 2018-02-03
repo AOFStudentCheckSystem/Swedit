@@ -1,29 +1,28 @@
 package cn.com.guardiantech.scribe.event
 
-import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import cn.com.guardiantech.scribe.DBActivity
 import cn.com.guardiantech.scribe.DBFragment
 import cn.com.guardiantech.scribe.R
+import cn.com.guardiantech.scribe.controller.EventController
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
 import cn.com.guardiantech.scribe.dialog.DatePickerFragment
 import cn.com.guardiantech.scribe.dialog.TimePickerFragment
 import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
-import cn.com.guardiantech.scribe.util.setString
+import cn.com.guardiantech.scribe.setString
 import com.google.common.eventbus.Subscribe
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 class EventDetailFragment : DBFragment() {
-    private lateinit var master: EventDetailFragment.OnEventDetailChangeListener
     private lateinit var event: ActivityEvent
 
     private lateinit var eventId: TextView
@@ -32,16 +31,12 @@ class EventDetailFragment : DBFragment() {
     private lateinit var eventTime: TextView
     private lateinit var eventDescription: EditText
     private lateinit var eventStatus: TextView
-    private lateinit var dummy: LinearLayout
-
-    private lateinit var editTexts: List<EditText>
 
     private var editMode: Boolean = false
 
-    private val TAG = "EventDetailFragment"
+    override val TAG = "EventDetailFragment"
 
     interface OnEventDetailChangeListener {
-        fun onEventDetailEdit()
         fun onEventDetailBack()
     }
 
@@ -56,9 +51,6 @@ class EventDetailFragment : DBFragment() {
         eventDescription = rootView.findViewById(R.id.event_detail_eventDescription)
         eventStatus = rootView.findViewById(R.id.event_detail_eventStatus)
 
-
-        editTexts = listOf(eventName, eventDescription)
-
         if (savedInstanceState == null) {
             event = arguments?.getSerializable("event") as ActivityEvent
             setEditable(false)
@@ -69,6 +61,8 @@ class EventDetailFragment : DBFragment() {
 
         updateFields()
 
+        setEditTextListener()
+
         dateTimeSetup()
 
         return rootView
@@ -77,6 +71,7 @@ class EventDetailFragment : DBFragment() {
     private fun dateTimeSetup() {
         eventDate.setOnClickListener {
             if (editMode) {
+                temporaryDisableKeyboard()
                 val datePicker = DatePickerFragment()
                 datePicker.arguments = Bundle().let {
                     it.putSerializable("eventDate", event.eventTime)
@@ -89,6 +84,7 @@ class EventDetailFragment : DBFragment() {
 
         eventTime.setOnClickListener {
             if (editMode) {
+                temporaryDisableKeyboard()
                 val timePicker = TimePickerFragment()
                 timePicker.arguments = Bundle().let {
                     it.putSerializable("eventTime", event.eventTime)
@@ -100,11 +96,40 @@ class EventDetailFragment : DBFragment() {
         }
     }
 
+    private fun setEditTextListener() {
+        eventName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                event.eventName = s.toString()
+            }
+        })
+
+        eventDescription.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                event.eventDescription = s.toString()
+            }
+        })
+    }
+
     @Subscribe
     fun onTimeSet(timeSet: TimePickerFragment.TimeSetEvent) {
         if (timeSet.tag == TAG) {
             event.eventTime = timeSet.time
             updateFields()
+            temporaryDisableKeyboard(true)
         }
     }
 
@@ -113,14 +138,22 @@ class EventDetailFragment : DBFragment() {
         if (dateSet.tag == TAG) {
             event.eventTime = dateSet.time
             updateFields()
+            temporaryDisableKeyboard(true)
         }
     }
 
     @Subscribe
-    fun onToolButtonClick(event: EventActivity.ToolButtonClick) {
+    fun onToolButtonClick(click: EventActivity.ToolButtonClick) {
         if (editMode) {
-            //TODO: Upload
-            setEditable(false)
+            EventController.editEvent(event) { success, error ->
+                (activity as EventActivity).stopLoading()
+                if (success) {
+                    setEditable(false)
+                } else {
+                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
+                }
+            }
+            (activity as EventActivity).startLoading()
         } else {
             setEditable(true)
         }
@@ -128,14 +161,14 @@ class EventDetailFragment : DBFragment() {
 
     override fun onEventsChange(eventsChangeEvent: EventsChangeEvent) {
         var delete = true
-        (activity as DBActivity).dbHelper.eventDao.queryForId(event.eventId)?.let {
+        (activity as EventActivity).dbHelper.eventDao.queryForId(event.eventId)?.let {
             delete = false
             event = it
             updateFields()
         }
         if (delete) {
-            (activity as DBActivity).let {
-                Toast.makeText(it.applicationContext, "This event is gone", Toast.LENGTH_LONG).show()
+            (activity as EventActivity).let {
+                Toast.makeText(it.applicationContext, "This event is gone", Toast.LENGTH_SHORT).show()
                 it.supportFragmentManager.popBackStack()
             }
         }
@@ -160,19 +193,16 @@ class EventDetailFragment : DBFragment() {
         (activity as EventActivity).setToolButtonText(if (editable) "Save" else "Edit")
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnEventDetailChangeListener) {
-            master = context
+    private fun temporaryDisableKeyboard(recover: Boolean = false) {
+        if (editMode) {
+            eventName.isEnabled = recover
+            eventDescription.isEnabled = recover
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::master.isInitialized) {
-            master.onEventDetailBack()
-        }
-        (activity as EventActivity).setToolButtonText("")
+        (activity as EventActivity).onEventDetailBack()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

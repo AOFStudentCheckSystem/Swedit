@@ -3,12 +3,13 @@ package cn.com.guardiantech.scribe
 import android.app.Fragment
 import android.os.Bundle
 import cn.com.guardiantech.scribe.eventbus.event.EventsChangeEvent
+import cn.com.guardiantech.scribe.util.Tagable
 import com.google.common.eventbus.Subscribe
 
 /**
  * Created by liupeiqi on 2017/4/25.
  */
-open class DBFragment : Fragment() {
+abstract class DBFragment : Fragment(), Tagable {
 
     var withBus = true
         set(newVal) {

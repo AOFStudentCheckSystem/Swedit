@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import java.nio.charset.Charset
 
 
 /**
@@ -89,7 +90,7 @@ class API {
             Log.v("editEvent requestBody", requestBody)
             val editEventRequest = object : JsonObjectRequest(
                     Request.Method.POST,
-                    "$BASE_URL/checkin/event",
+                    "$BASE_URL/checkin/event/",
                     JSONObject(requestBody),
                     Response.Listener { resp ->
                         val eventJson = resp.toString()
@@ -123,23 +124,28 @@ class API {
                     }
                     else -> {
                         when (it.statusCode) {
-                            401 -> {
-                                //token expire, unauthorized
-                                return "Credential Error!"
-                            }
-
+//                            401 -> {
+//                                //token expire, unauthorized
+//                                return "Credential Error!"
+//                            }
+//
                             403 -> {
                                 //no permission
                                 return "You don't have permission to do this!"
                             }
-
-                            500 -> {
-                                //401
-                                return "Credential Error!"
-                            }
+//
+//                            500 -> {
+//                                //401
+//                                return "Credential Error!"
+//                            }
+//
+//                            404 -> {
+//                                return "Not Found!"
+//                            }
 
                             else -> {
-                                return "Unknown Error: ${error.message}"
+                                Log.i("API error", "${error.message}")
+                                return "Error: ${JSONObject(error.networkResponse.data.toString(Charset.forName("UTF-8"))).getString("message")} (${error.networkResponse.statusCode})"
                             }
                         }
                     }

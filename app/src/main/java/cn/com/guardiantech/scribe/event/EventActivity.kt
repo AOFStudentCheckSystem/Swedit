@@ -1,5 +1,6 @@
 package cn.com.guardiantech.scribe.event
 
+import android.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
@@ -22,7 +23,7 @@ import cn.com.guardiantech.scribe.controller.AccountController
 import cn.com.guardiantech.scribe.controller.EventController
 import cn.com.guardiantech.scribe.eventbus.event.LoginEvent
 import cn.com.guardiantech.scribe.preference.SettingsFragment
-import cn.com.guardiantech.scribe.util.setString
+import cn.com.guardiantech.scribe.setString
 import kotlinx.android.synthetic.main.activity_event.*
 
 class EventActivity : DBActivity(),
@@ -31,7 +32,10 @@ class EventActivity : DBActivity(),
         LoadingManager,
         NavigationView.OnNavigationItemSelectedListener {
 
-    private val TAG = "EVENT_ACTIVITY"
+    companion object {
+        const val TAG = "EVENT_ACTIVITY"
+    }
+
     private lateinit var toggle: ActionBarDrawerToggle
 
     //Login Dialog
@@ -66,10 +70,11 @@ class EventActivity : DBActivity(),
         API.context = applicationContext
 
         if (savedInstanceState == null) {
-            //Create fragment
+            //Create root fragment
+            val f = EventListFragment()
             fragmentManager.beginTransaction()
-                    .add(R.id.event_fragment, EventListFragment()).commit()
-
+                    .add(R.id.event_fragment, f, f.TAG)
+                    .commit()
         }
 
         //Add drawer
@@ -109,6 +114,10 @@ class EventActivity : DBActivity(),
                 Toast.makeText(this, "Welcome! Please Login and refresh this event list", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun cleanUpFragmentStack() {
+        fragmentManager.popBackStackImmediate(null, POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun onDrawerHeaderClick() {
@@ -170,19 +179,17 @@ class EventActivity : DBActivity(),
         when (item.itemId) {
             R.id.nav_settings -> {
                 Log.v(TAG, "nav_settings clicked")
+                cleanUpFragmentStack()
+                val f = SettingsFragment()
                 fragmentManager
                         .beginTransaction()
-                        .replace(R.id.event_fragment, SettingsFragment())
+                        .replace(R.id.event_fragment, f, f.TAG)
                         .addToBackStack(null)
                         .commit()
             }
             R.id.nav_event_list -> {
                 Log.v(TAG, "nav_event_list clicked")
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.event_fragment, EventListFragment())
-                        .addToBackStack(null)
-                        .commit()
+                cleanUpFragmentStack()
             }
         }
         activity_event_drawer.closeDrawers()
@@ -191,22 +198,24 @@ class EventActivity : DBActivity(),
 
     //Go to event detail
     override fun onEventSelected(eventId: String) {
+        val f = EventDetailFragment().let {
+            it.arguments = Bundle().let {
+                it.putSerializable("event", dbHelper.eventDao.queryForId(eventId))
+                it
+            }
+            it
+        }
+
         fragmentManager.beginTransaction()
-                .replace(R.id.event_fragment, EventDetailFragment().let {
-                    it.arguments = Bundle().let {
-                        it.putSerializable("event", dbHelper.eventDao.queryForId(eventId))
-                        it
-                    }
-                    it
-                })
+                .replace(R.id.event_fragment, f, f.TAG)
                 .addToBackStack(null)
                 .commit()
     }
 
     //Event Detail Callbacks
-    override fun onEventDetailEdit() {}
-
-    override fun onEventDetailBack() {}
+    override fun onEventDetailBack() {
+        setToolButtonText("")
+    }
 
     //Loading Manager
     override fun startLoading() {
@@ -216,7 +225,7 @@ class EventActivity : DBActivity(),
 
     override fun stopLoading() {
         loadingDialog?.let {
-            it.hide()
+            it.dismiss()
             loadingDialog = null
         }
     }

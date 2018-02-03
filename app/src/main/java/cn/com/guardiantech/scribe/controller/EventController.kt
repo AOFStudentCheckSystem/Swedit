@@ -16,7 +16,6 @@ class EventController {
 
         fun syncEventList(callback: () -> Unit = {}) {
             API.fetchEventList(::syncEventListImpl)
-            Global.bus.post(EventsChangeEvent())
             callback()
         }
 
@@ -24,19 +23,28 @@ class EventController {
          * Do not call this function outside this class unless testing
          */
         internal fun syncEventListImpl(success: Boolean, remoteEvents: List<ActivityEvent>) {
-            val localEvents = eventDao.queryForAll()
-            remoteEvents.forEach {
-                eventDao.createOrUpdate(it)
-            }
-            val deletedEventIds = localEvents.filter {
-                !remoteEvents.any { remoteEvent -> remoteEvent.eventId === it.eventId }
-            }.map {
-                        it.eventId
+            if (success) {
+                //All local events here
+                val localEvents = eventDao.queryForAll()
+                //Database = local(updated) + remote
+                remoteEvents.forEach {
+                    eventDao.createOrUpdate(it)
+                }
+                //Here we find local event that does not exists in remote
+                val deletedEventIds = localEvents.filter { localEvent ->
+                    !remoteEvents.any { remoteEvent ->
+                        remoteEvent.eventId == localEvent.eventId
                     }
-            eventDao.deleteIds(deletedEventIds)
+                }.map {
+                            it.eventId
+                        }
+                //Delete them
+                eventDao.deleteIds(deletedEventIds)
+                Global.bus.post(EventsChangeEvent())
+            }
         }
 
-        fun editEvent(event: ActivityEvent, callback: () -> Unit = {}) {
+        fun editEvent(event: ActivityEvent, callback: (success: Boolean, error: String?) -> Unit = { _, _ -> }) {
             API.editEvent(EventRequest(
                     eventId = event.eventId,
                     name = event.eventName,
@@ -44,7 +52,11 @@ class EventController {
                     time = event.eventTime,
                     status = event.eventStatus
             )) { success, error, editedEvent ->
-
+                if (success) {
+                    eventDao.createOrUpdate(editedEvent)
+                    Global.bus.post(EventsChangeEvent())
+                }
+                callback(success, error)
             }
         }
     }

@@ -23,6 +23,9 @@ import kotlinx.android.synthetic.main.fragment_event_list.*
 class EventListFragment : DBFragment(),
         SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemClickListener {
+
+    override val TAG = "EventListFragment"
+
     private lateinit var eventDao: Dao<ActivityEvent, String>
     private lateinit var mAdapter: EventListAdapter
     private lateinit var master: EventListFragment.OnEventListSelectedListener
@@ -56,7 +59,9 @@ class EventListFragment : DBFragment(),
     }
 
     override fun onEventsChange(eventsChangeEvent: EventsChangeEvent) {
-        mAdapter.notifyDataSetChanged()
+        if (::mAdapter.isInitialized) {
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     interface OnEventListSelectedListener {

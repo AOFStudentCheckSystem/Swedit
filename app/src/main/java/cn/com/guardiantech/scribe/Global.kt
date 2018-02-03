@@ -1,5 +1,8 @@
 package cn.com.guardiantech.scribe
 
+import android.app.FragmentManager
+import android.text.SpannableStringBuilder
+import cn.com.guardiantech.scribe.event.EventListFragment
 import cn.com.guardiantech.scribe.jackson.deserializer.DateDeserializer
 import cn.com.guardiantech.scribe.jackson.serializer.DateSerializer
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -27,4 +30,8 @@ class Global {
             it
         }
     }
+}
+
+fun android.widget.EditText.setString(str: String) {
+    text = SpannableStringBuilder(str)
 }
