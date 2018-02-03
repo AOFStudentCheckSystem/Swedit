@@ -18,16 +18,16 @@ class ActivityEvent(
         var eventId: String,
 
         @Column
-        var eventName: String,
+        var eventName: String = "",
 
         @Lob
         @Column
-        var eventDescription: String,
+        var eventDescription: String = "",
 
         @Column
-        var eventTime: Date,
+        var eventTime: Date = Date(),
 
         @Enumerated(value = EnumType.STRING)
         @Column
-        var eventStatus: EventStatus
+        var eventStatus: EventStatus = EventStatus.FUTURE
 ) : Serializable

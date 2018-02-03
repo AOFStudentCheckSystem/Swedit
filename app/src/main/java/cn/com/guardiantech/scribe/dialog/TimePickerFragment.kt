@@ -14,7 +14,7 @@ import java.util.*
  */
 class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
-    class TimeSetEvent (
+    class TimeSetEvent(
             val time: Date,
             val tag: String
     )

@@ -1,8 +1,8 @@
 package cn.com.guardiantech.scribe.api.request.checkin
 
+import cn.com.guardiantech.scribe.database.entity.EventStatus
 import cn.com.guardiantech.scribe.util.NoArg
 import java.util.*
-import cn.com.guardiantech.scribe.database.entity.EventStatus
 
 /**
  * Created by dedztbh on 1/6/18.

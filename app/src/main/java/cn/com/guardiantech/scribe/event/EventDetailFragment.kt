@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import cn.com.guardiantech.scribe.DBActivity
@@ -27,14 +28,22 @@ class EventDetailFragment : DBFragment() {
 
     private lateinit var eventId: TextView
     private lateinit var eventName: EditText
-    private lateinit var eventDate: EditText
-    private lateinit var eventTime: EditText
+    private lateinit var eventDate: TextView
+    private lateinit var eventTime: TextView
     private lateinit var eventDescription: EditText
     private lateinit var eventStatus: TextView
+    private lateinit var dummy: LinearLayout
+
+    private lateinit var editTexts: List<EditText>
 
     private var editMode: Boolean = false
 
     private val TAG = "EventDetailFragment"
+
+    interface OnEventDetailChangeListener {
+        fun onEventDetailEdit()
+        fun onEventDetailBack()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -47,12 +56,15 @@ class EventDetailFragment : DBFragment() {
         eventDescription = rootView.findViewById(R.id.event_detail_eventDescription)
         eventStatus = rootView.findViewById(R.id.event_detail_eventStatus)
 
+
+        editTexts = listOf(eventName, eventDescription)
+
         if (savedInstanceState == null) {
             event = arguments?.getSerializable("event") as ActivityEvent
-            setEditable(true)
+            setEditable(false)
         } else {
             event = savedInstanceState.getSerializable("event") as ActivityEvent
-            editMode = savedInstanceState.getBoolean("editMode")
+            setEditable(savedInstanceState.getBoolean("editMode"))
         }
 
         updateFields()
@@ -63,7 +75,6 @@ class EventDetailFragment : DBFragment() {
     }
 
     private fun dateTimeSetup() {
-        eventDate.isFocusable = false
         eventDate.setOnClickListener {
             if (editMode) {
                 val datePicker = DatePickerFragment()
@@ -76,7 +87,6 @@ class EventDetailFragment : DBFragment() {
             }
         }
 
-        eventTime.isFocusable = false
         eventTime.setOnClickListener {
             if (editMode) {
                 val timePicker = TimePickerFragment()
@@ -106,6 +116,16 @@ class EventDetailFragment : DBFragment() {
         }
     }
 
+    @Subscribe
+    fun onToolButtonClick(event: EventActivity.ToolButtonClick) {
+        if (editMode) {
+            //TODO: Upload
+            setEditable(false)
+        } else {
+            setEditable(true)
+        }
+    }
+
     override fun onEventsChange(eventsChangeEvent: EventsChangeEvent) {
         var delete = true
         (activity as DBActivity).dbHelper.eventDao.queryForId(event.eventId)?.let {
@@ -125,8 +145,8 @@ class EventDetailFragment : DBFragment() {
         if (::event.isInitialized) {
             eventId.text = event.eventId
             eventName.setString(event.eventName)
-            eventDate.setString(SimpleDateFormat("yyyy-MM-dd EEE", Locale.US).format(event.eventTime))
-            eventTime.setString(SimpleDateFormat("HH:mm", Locale.US).format(event.eventTime))
+            eventDate.text = SimpleDateFormat("yyyy-MM-dd EEE", Locale.US).format(event.eventTime)
+            eventTime.text = SimpleDateFormat("HH:mm", Locale.US).format(event.eventTime)
             eventDescription.setString(event.eventDescription)
             eventStatus.text = event.eventStatus.toString()
         }
@@ -137,11 +157,7 @@ class EventDetailFragment : DBFragment() {
             it.isEnabled = editable
         }
         editMode = editable
-    }
-
-    interface OnEventDetailChangeListener {
-        fun onEventDetailEdit()
-        fun onEventDetailBack()
+        (activity as EventActivity).setToolButtonText(if (editable) "Save" else "Edit")
     }
 
     override fun onAttach(context: Context) {
@@ -156,6 +172,7 @@ class EventDetailFragment : DBFragment() {
         if (::master.isInitialized) {
             master.onEventDetailBack()
         }
+        (activity as EventActivity).setToolButtonText("")
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {

@@ -29,12 +29,11 @@
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
                     <Button
-                        android:id="@+id/edit_button"
+                        android:id="@+id/tool_button"
                         style="@style/Widget.AppCompat.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="Action"
                         android:visibility="gone"/>
 
                 </android.support.v7.widget.Toolbar>

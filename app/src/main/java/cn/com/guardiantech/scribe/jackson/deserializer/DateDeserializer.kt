@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  * Created by dedztbh on 1/7/18.
  * Project AOFGoBackend
  */
-class DateDeserializer: JsonDeserializer<Date>() {
+class DateDeserializer : JsonDeserializer<Date>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Date {
         val unixTimestamp = p.text.trim()
         return Date(TimeUnit.SECONDS.toMillis(unixTimestamp.toLong()))

@@ -4,7 +4,10 @@ import cn.com.guardiantech.scribe.util.NoArg
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.j256.ormlite.field.DataType
 import com.j256.ormlite.field.DatabaseField
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
 
 /**
  * Created by liupeiqi on 2017/4/28.

@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.api.request.authentication.AuthenticationRequest
+import cn.com.guardiantech.scribe.api.request.checkin.EventRequest
 import cn.com.guardiantech.scribe.database.entity.ActivityEvent
 import cn.com.guardiantech.scribe.database.entity.Session
 import com.android.volley.*
@@ -34,6 +35,7 @@ class API {
             q
         }
 
+        //Auth
         fun login(authRequest: AuthenticationRequest, callback: (success: Boolean, error: String?, sessionObject: Session?) -> Unit) {
             val requestBody = Global.mapper.writeValueAsString(authRequest)
             Log.v("login requestBody", requestBody)
@@ -58,6 +60,7 @@ class API {
             queue.add(loginRequest)
         }
 
+        //Event
         fun fetchEventList(callback: (success: Boolean, remoteEvents: List<ActivityEvent>) -> Unit) {
             val request = object : JsonArrayRequest(
                     Request.Method.GET,
@@ -81,6 +84,31 @@ class API {
             queue.add(request)
         }
 
+        fun editEvent(eventRequest: EventRequest, callback: (success: Boolean, error: String?, editedEvent: ActivityEvent?) -> Unit) {
+            val requestBody = Global.mapper.writeValueAsString(eventRequest)
+            Log.v("editEvent requestBody", requestBody)
+            val editEventRequest = object : JsonObjectRequest(
+                    Request.Method.POST,
+                    "$BASE_URL/checkin/event",
+                    JSONObject(requestBody),
+                    Response.Listener { resp ->
+                        val eventJson = resp.toString()
+                        Log.v("AccountAPI eventEventSuccess", eventJson)
+                        callback(true, null, Global.mapper.readValue(eventJson, ActivityEvent::class.java))
+                    },
+                    Response.ErrorListener { e ->
+                        callback(false, handle(e), null)
+                    }
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return apiHeaders
+                }
+            }
+
+            queue.add(editEventRequest)
+        }
+
+        //Error Handle
         private fun handle(error: VolleyError): String? {
             error.networkResponse?.let {
                 when (it) {

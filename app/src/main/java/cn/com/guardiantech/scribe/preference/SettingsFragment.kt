@@ -8,7 +8,7 @@ import cn.com.guardiantech.scribe.R
 /**
  * Created by dedztbh on 18-1-31.
  */
-class SettingsFragment: PreferenceFragment() {
+class SettingsFragment : PreferenceFragment() {
     companion object {}
 
     override fun onCreate(savedInstanceState: Bundle?) {

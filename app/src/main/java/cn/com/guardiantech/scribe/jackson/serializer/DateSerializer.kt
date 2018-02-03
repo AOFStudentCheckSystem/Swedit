@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  * Created by dedztbh on 1/7/18.
  * Project AOFGoBackend
  */
-class DateSerializer: JsonSerializer<Date>() {
+class DateSerializer : JsonSerializer<Date>() {
     override fun serialize(value: Date, gen: JsonGenerator, serializers: SerializerProvider) {
         gen.writeNumber(TimeUnit.MILLISECONDS.toSeconds(value.time))
     }

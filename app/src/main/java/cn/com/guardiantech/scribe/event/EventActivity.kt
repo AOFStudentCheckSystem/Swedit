@@ -8,8 +8,13 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.MenuItem
-import android.widget.*
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import cn.com.guardiantech.scribe.DBActivity
+import cn.com.guardiantech.scribe.Global
 import cn.com.guardiantech.scribe.R
 import cn.com.guardiantech.scribe.api.API
 import cn.com.guardiantech.scribe.api.LoadingManager
@@ -37,6 +42,8 @@ class EventActivity : DBActivity(),
 
     //Loading Manager
     private var loadingDialog: ProgressDialog? = null
+
+    class ToolButtonClick
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +94,10 @@ class EventActivity : DBActivity(),
 
         //Login State initialization
         AccountController.initLoginState()
+
+        tool_button.setOnClickListener {
+            Global.bus.post(ToolButtonClick())
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -145,6 +156,15 @@ class EventActivity : DBActivity(),
         stopLoading()
     }
 
+    fun setToolButtonText(text: String) {
+        if (text.isBlank() && tool_button.text.isNotBlank()) {
+            tool_button.visibility = View.GONE
+        } else if (text.isNotBlank() && tool_button.text.isBlank()) {
+            tool_button.visibility = View.VISIBLE
+        }
+        tool_button.text = text
+    }
+
     //Menu Selected
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -183,10 +203,12 @@ class EventActivity : DBActivity(),
                 .commit()
     }
 
+    //Event Detail Callbacks
     override fun onEventDetailEdit() {}
 
     override fun onEventDetailBack() {}
 
+    //Loading Manager
     override fun startLoading() {
         if (loadingDialog === null)
             loadingDialog = ProgressDialog.show(this, "", "Loading, Please wait...", true)
